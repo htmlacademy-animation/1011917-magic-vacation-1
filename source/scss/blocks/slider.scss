@@ -39,10 +39,17 @@
   &:nth-child(even) {
     .slider__item-text {
       align-self: flex-end;
+      animation: fadein-right-delay 1s;
 
       @media (max-width: $mobile) and (orientation: landscape) {
         align-self: flex-start;
       }
+    }
+  }
+
+  &:nth-child(odd) {
+    .slider__item-text {
+      animation: fadein-right 1s;
     }
   }
 
@@ -122,6 +129,35 @@
     min-height: 14rem;
     font-size: 1.4rem;
     line-height: 1.5rem;
+  }
+}
+
+@keyframes fadein-right {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(50px);
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadein-right-delay {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+    -webkit-transform: translateX(50px);
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
   }
 }
 
