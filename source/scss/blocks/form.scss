@@ -1,7 +1,16 @@
+.screen {
+  &.active {
+    & .form__field {
+      width: calc(100% - 21rem);
+    }
+  }
+}
+
 .form {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .form__label {
@@ -34,7 +43,8 @@
   margin-right: 3rem;
   padding: 0 5.6rem;
   height: 6rem;
-  width: calc(100% - 21rem);
+  width: 50px;
+  transition: width 800ms ease;
   text-transform: uppercase;
   font: inherit;
   font-size: 2.4rem;
@@ -43,8 +53,6 @@
   border: 0;
   border-radius: 3rem;
   outline: none;
-
-  animation: to-left 0.6s ease;
 
   &:focus {
     border: 1px solid $c-purple;
@@ -80,19 +88,8 @@
   }
 }
 
-@keyframes to-left {
-  from {
-    -webkit-transform: translateX(20%);
-    transform: translateX(20%);
-  }
-  to {
-    -webkit-transform: translateY(0);
-    transform: translateY(0);
-  }
-}
-
 .form__button {
-  flex-grow: 1;
+  flex-grow: 0;
 
   @media (orientation: portrait) {
     position: relative;
