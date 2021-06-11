@@ -1,10 +1,22 @@
 .social-block {
   position: relative;
 
-  &.social-block--active {
+  &:hover {
     & .social-block__link {
       transform: translateY(0);
       opacity: 1;
+
+      &--fb {
+        transition-delay: 0.1s;
+      }
+
+      &--insta {
+        transition-delay: 0.2s;
+      }
+
+      &--vk {
+        transition-delay: 0.3s;
+      }
     }
   }
 }
@@ -49,6 +61,8 @@ body {
     background-color: $c-light;
     border: 2px solid $c-light;
     z-index: -1;
+
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
   }
 
   svg {
@@ -229,7 +243,6 @@ body {
   }
 
   &--fb {
-    transition-delay: 0.1s;
     svg {
       width: 0.8rem;
       height: 1.7rem;
@@ -242,7 +255,6 @@ body {
   }
 
   &--insta {
-    transition-delay: 0.2s;
     svg {
       width: 1.5rem;
       height: 1.5rem;
@@ -255,7 +267,6 @@ body {
   }
 
   &--vk {
-    transition-delay: 0.3s;
     svg {
       width: 1.7rem;
       height: 1rem;
