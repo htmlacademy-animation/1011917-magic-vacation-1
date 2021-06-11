@@ -9,6 +9,20 @@
   }
 }
 
+body {
+  &.load {
+    & .page-header__nav {
+      opacity: 1;
+    }
+  }
+}
+
+.page-header__nav {
+  opacity: 0;
+  transition: opacity 0.5s $half-time-large-distance;
+  transition-delay: 0.2s;
+}
+
 .social-block__toggler {
   @include btn-reset;
   position: relative;
