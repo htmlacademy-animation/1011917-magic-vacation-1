@@ -1,3 +1,12 @@
+body {
+  &.load {
+    & .screen__footer {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
 .screen {
   position: relative;
   display: flex;
@@ -46,6 +55,10 @@
   color: $c-dark;
   background-color: $c-light;
   z-index: 1;
+
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.5s $half-time-large-distance, transform 0.5s $half-time-large-distance;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     width: 3.5rem;
@@ -290,7 +303,8 @@
 
 .screen--story {
   background-color: $c-dark;
-  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"), url("../img/slide4.jpg");
+  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"),
+    url("../img/slide4.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
