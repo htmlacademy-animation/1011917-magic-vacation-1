@@ -5,6 +5,31 @@ body {
       transform: translateY(0);
     }
   }
+
+  &.screen--toggling {
+    &::before {
+      height: 100%;
+      opacity: 1;
+    }
+  }
+}
+
+.load {
+  &::before {
+    content: "";
+    position: fixed;
+    z-index: 2;
+
+    height: 0;
+    width: 100%;
+
+    bottom: 0;
+    opacity: 0;
+
+    background-color: #5f458c;
+
+    transition: height 0.4s ease;
+  }
 }
 
 .screen {
