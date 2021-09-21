@@ -47,7 +47,7 @@
   animation: increase-width-from-right 1.5s cubic-bezier(0.165, 0.840, 0.440, 1.000) normal forwards;
 
   &--win-screen {
-    animation: increase-width-from-right-delay 1.5s cubic-bezier(0.165, 0.840, 0.440, 1.000) normal forwards;
+    animation: increase-width-from-right-delay 2s cubic-bezier(0.165, 0.840, 0.440, 1.000) normal forwards;
   }
 
   &:focus {
@@ -85,7 +85,13 @@
 }
 
 .form__button {
-  // flex-grow: 1;
+  &--win-screen {
+    animation: opacity-delay 1.5s ease-in-out;
+  }
+
+  &-text--win-screen {
+    animation: opacity-delay 2.3s ease-in-out;
+  }
 
   @media (orientation: portrait) {
     position: relative;

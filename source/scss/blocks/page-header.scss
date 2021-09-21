@@ -1,3 +1,12 @@
+body {
+  &.load {
+    & .page-header__logo {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
 .page-header {
   position: fixed;
   top: 0;
