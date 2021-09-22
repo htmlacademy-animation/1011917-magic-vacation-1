@@ -47,8 +47,16 @@
   font-family: $font-alt;
   font-weight: 400;
   font-size: 4.8rem;
-  line-height: 0.906;
+  line-height: 1.3;
   letter-spacing: -0.04em;
+
+  .space > .letter {
+    transform: translate3d(0, 14rem, 0);
+  }
+
+  &.active .space > .letter {
+    transform: translate3d(0, 1rem, 0);
+  }
 
   @media (min-width: $stop-scaling) {
     font-size: 48px;

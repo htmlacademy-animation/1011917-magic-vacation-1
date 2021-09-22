@@ -80,6 +80,17 @@ body {
   color: $c-dark;
   background-color: $c-light;
   z-index: 1;
+  transform: translateY(100%);
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.5, 0.8, 1, 1);
+  transition-duration: 0.5s;
+  transition-delay: 0.6s;
+
+  .body--loaded .active & {
+    transform: translateY(0);
+    opacity: 1;
+  }
 
   opacity: 0;
   transform: translateY(100%);
@@ -341,7 +352,9 @@ body {
 }
 
 .screen--prizes {
-  background-color: $c-dark;
+  &.active {
+    z-index: 2;
+  }
 }
 
 .screen--game {
@@ -393,3 +406,18 @@ body {
 .screen--rules {
   background-color: $c-dark;
 }
+
+.story__title {
+  .space {
+    line-height: 1.4;
+  }
+
+  .space > .letter {
+    transform: translate3d(0, 14rem, 0);
+  }
+
+  &.active .space > .letter {
+    transform: translate3d(0, 1rem, 0);
+  }
+}
+

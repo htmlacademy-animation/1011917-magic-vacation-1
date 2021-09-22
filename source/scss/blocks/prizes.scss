@@ -28,8 +28,21 @@
   font-family: $font-alt;
   font-weight: 400;
   font-size: 4.8rem;
-  line-height: 0.906;
+  line-height: 1.2;
   letter-spacing: -0.04em;
+
+  .space {
+    padding: 0.5rem 0;
+    margin: 0 -0.04em;
+  }
+
+  .space > .letter {
+    transform: translate3d(0, 14rem, 0);
+  }
+
+  &.active .space > .letter {
+    transform: translate3d(0, 1rem, 0);
+  }
 
   @media (min-width: $stop-scaling) {
     font-size: 48px;
@@ -38,6 +51,10 @@
   @media (max-width: $tablet) and (orientation: portrait) {
     margin-bottom: 1.8rem;
     font-size: 3.6rem;
+
+    &.active .space > .letter {
+      transform: translate3d(0, 1rem, 0);
+    }
   }
 
   @media (max-width: $tablet) and (orientation: landscape) {
@@ -58,6 +75,8 @@
   text-transform: uppercase;
   font-size: 2.4rem;
   line-height: 1.2;
+  opacity: 0;
+  animation: fadeInUp 1.5s forwards;
 
   @media (min-width: $stop-scaling) {
     margin-left: 58px;
@@ -94,6 +113,7 @@
   justify-content: flex-end;
   align-items: flex-end;
   margin-top: auto;
+  animation: slide-in-blurred-right 1.25s forwards;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     flex-direction: column;

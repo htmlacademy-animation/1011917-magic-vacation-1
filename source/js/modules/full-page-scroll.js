@@ -1,19 +1,13 @@
-import throttle from "lodash/throttle";
+import throttle from 'lodash/throttle';
+import {GameTitleAccentTypography, TitleAccentTypography, DateAccentTypography, PrizesTitleAccentTypography, StoryTitleAccentTypography, RulesTitleAccentTypography} from './intro';
 
 export default class FullPageScroll {
   constructor() {
-    this.THROTTLE_TIMEOUT = 1000;
-    this.scrollFlag = true;
-    this.timeout = null;
+    this.THROTTLE_TIMEOUT = 2000;
 
-    this.screenElements = document.querySelectorAll(
-        `.screen:not(.screen--result)`
-    );
-    this.menuElements = document.querySelectorAll(
-        `.page-header__menu .js-menu-link`
-    );
-
-    this.body = document.querySelector(`body`);
+    this.screenElements = document.querySelectorAll(`.screen:not(.screen--result)`);
+    this.menuElements = document.querySelectorAll(`.page-header__menu .js-menu-link`);
+    this.fillScreen = document.querySelector(`.overlay-animation-screen`);
 
     this.activeScreen = 0;
     this.onScrollHandler = this.onScroll.bind(this);
@@ -31,61 +25,46 @@ export default class FullPageScroll {
   }
 
   onScroll(evt) {
-    if (this.scrollFlag) {
-      this.reCalculateActiveScreenPosition(evt.deltaY);
-      const currentPosition = this.activeScreen;
-      if (currentPosition !== this.activeScreen) {
-        this.changePageDisplay();
-      }
+    const currentPosition = this.activeScreen;
+    this.reCalculateActiveScreenPosition(evt.deltaY);
+    if (currentPosition !== this.activeScreen) {
+      this.changePageDisplay();
     }
-    this.scrollFlag = false;
-    if (this.timeout !== null) {
-      clearTimeout(this.timeout);
-    }
-    this.timeout = setTimeout(() => {
-      this.timeout = null;
-      this.scrollFlag = true;
-    }, this.THROTTLE_TIMEOUT);
   }
 
   onUrlHashChanged() {
-    const newIndex = Array.from(this.screenElements).findIndex(
-        (screen) => location.hash.slice(1) === screen.id
-    );
-    this.activeScreen = newIndex < 0 ? 0 : newIndex;
+    const newIndex = Array.from(this.screenElements).findIndex((screen) => location.hash.slice(1) === screen.id);
+    this.activeScreen = (newIndex < 0) ? 0 : newIndex;
+    this.handleAnimations();
     this.changePageDisplay();
   }
 
   changePageDisplay() {
-    // Нужна помощь в фиксе баги:
-    // При смене экрана с задержкой - не срабатывает анимация...
-    if (
-      this.screenElements[1].classList.contains(`active`) &&
-      this.activeScreen === 2
-    ) {
-      this.body.classList.add(`screen--toggling`);
-      setTimeout(() => {
-        this.body.classList.remove(`screen--toggling`);
-        this.changeVisibilityDisplay();
-        this.changeActiveMenuItem();
-        this.emitChangeDisplayEvent();
-      }, 400);
-    } else {
-      this.changeVisibilityDisplay();
-      this.changeActiveMenuItem();
-      this.emitChangeDisplayEvent();
-    }
+    this.changeVisibilityDisplay();
+    this.changeActiveMenuItem();
+    this.emitChangeDisplayEvent();
   }
 
   changeVisibilityDisplay() {
-    this.screenElements.forEach((screen) => {
-      screen.classList.add(`screen--hidden`);
-      screen.classList.remove(`active`);
-    });
-    this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
-    setTimeout(() => {
-      this.screenElements[this.activeScreen].classList.add(`active`);
-    }, 100);
+    const isPrizesScreenActive = this.activeScreen === 2;
+
+    if (isPrizesScreenActive) {
+      this.screenElements.forEach((screen) => {
+        this.fillScreen.classList.add(`active`);
+        setTimeout(() => this.hideScreen(screen), 650);
+      });
+
+      this.fillScreen.classList.add(`active`);
+      setTimeout(() => this.showScreen(this.screenElements[this.activeScreen]), 650);
+    } else {
+      this.screenElements.forEach((screen) => {
+        this.fillScreen.classList.remove(`active`);
+        this.hideScreen(screen);
+      });
+
+      this.fillScreen.classList.remove(`active`);
+      this.showScreen(this.screenElements[this.activeScreen]);
+    }
   }
 
   changeActiveMenuItem() {
@@ -120,6 +99,50 @@ export default class FullPageScroll {
       );
     } else {
       this.activeScreen = Math.max(0, --this.activeScreen);
+    }
+  }
+
+  hideScreen(screen) {
+    screen.classList.add(`screen--hidden`);
+    screen.classList.remove(`active`);
+  }
+
+  showScreen(screen) {
+    screen.classList.remove(`screen--hidden`);
+    screen.classList.add(`active`);
+  }
+
+  handleAnimations() {
+    if (this.activeScreen === 0) {
+      setTimeout(() => TitleAccentTypography.runAnimation(), 500);
+      setTimeout(() => DateAccentTypography.runAnimation(), 1300);
+    } else {
+      TitleAccentTypography.destroyAnimation();
+      DateAccentTypography.destroyAnimation();
+    }
+
+    if (this.activeScreen === 1) {
+      setTimeout(() => StoryTitleAccentTypography.runAnimation(), 300);
+    } else {
+      StoryTitleAccentTypography.destroyAnimation();
+    }
+
+    if (this.activeScreen === 2) {
+      setTimeout(() => PrizesTitleAccentTypography.runAnimation(), 700);
+    } else {
+      PrizesTitleAccentTypography.destroyAnimation();
+    }
+
+    if (this.activeScreen === 3) {
+      setTimeout(() => RulesTitleAccentTypography.runAnimation(), 300);
+    } else {
+      RulesTitleAccentTypography.destroyAnimation();
+    }
+
+    if (this.activeScreen === 4) {
+      setTimeout(() => GameTitleAccentTypography.runAnimation(), 500);
+    } else {
+      GameTitleAccentTypography.destroyAnimation();
     }
   }
 }

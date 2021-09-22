@@ -1,14 +1,12 @@
 export default () => {
-  const rulesListItems = Array.from(document.querySelectorAll(`.rules__item`));
-  const lastItem = rulesListItems[rulesListItems.length - 1];
-  const lastItemText = lastItem.querySelector(`p`);
-  const rulesLink = document.querySelector(`.rules__link`);
+  const rulesItems = document.querySelectorAll(`.rules__item`);
 
-  rulesListItems.forEach((item, index) => {
-    item.style.setProperty(`--index`, String(index + 1));
-  });
+  if (rulesItems.length) {
+    const lastRulesItem = rulesItems[rulesItems.length - 1];
 
-  lastItemText.addEventListener(`animationend`, () => {
-    rulesLink.classList.add(`animated`);
-  });
+    lastRulesItem.addEventListener(`animationend`, () => {
+      const rulesLink = document.querySelector(`.rules__link`);
+      rulesLink.classList.add(`active`);
+    });
+  }
 };

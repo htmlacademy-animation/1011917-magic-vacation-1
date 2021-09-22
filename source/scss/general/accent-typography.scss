@@ -1,0 +1,11 @@
+.space {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.space > .letter {
+  display: inline-block;
+  vertical-align: middle;
+  will-change: transform;
+}

@@ -28,29 +28,70 @@
   left: 0;
   right: 0;
   bottom: 0;
+  width: 400px;
+  height: 640px;
+  margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: -1;
 
+  &>img {
+    position: absolute;
+  }
+
   @media (orientation: portrait) {
     left: -1rem;
     right: -1rem;
   }
+}
 
-  picture {
-    display: block;
-    width: 100%;
-    height: 100%;
+.result {
+  &__leaf-right {
+    z-index: 0;
+    bottom: 140px;
+    left: 270px;
+    width: 320px;
+
+    animation: rightleaf 3s cubic-bezier(.66,.6,.52,.99) forwards;
   }
 
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  &__leaf-left {
+    z-index: 0;
+    bottom: 40px;
+    right: 180px;
+    width: 320px;
+
+    animation: leftleaf 3s cubic-bezier(.66,.6,.52,.99) forwards;
+  }
+
+  &__leaf-green {
+    z-index: 1;
+    bottom: 100px;
+    left: 260px;
+    width: 330px;
+    animation: rightleaf 3s cubic-bezier(.66,.6,.52,.99) forwards;
+  }
+
+  &__suitcase {
+    z-index: 2;
+    bottom: 40px;
+    width: 600px;
+    height: 400px;
+    left: 50px;
+
+    animation: suitcase 0.6s cubic-bezier(.48,.47,.36,1.44) forwards;
+  }
+
+  &__flamingo {
+    z-index: 3;
+    bottom: 40px;
+    width: 240px;
+    height: 250px;
+    right: 120px;
+
+    animation: flamingo 3.9s linear forwards;
   }
 }
 
