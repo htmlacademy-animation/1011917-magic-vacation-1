@@ -177,12 +177,16 @@
     transform: translate3d(5px, 500px, 0);
   }
 
-  15% {
+  10% {
+    transform: translate3d(-5px, -5px, 0) rotateZ(3deg);
+  }
+
+  20% {
     transform: translate3d(-5px, -5px, 0) rotateZ(3deg);
   }
 
   40% {
-    transform: translate3d(0, 0, 0) rotateZ(0);
+    transform: translate3d(5px, 5px, 0) rotateZ(0);
   }
 
   60% {
@@ -190,7 +194,7 @@
   }
 
   80% {
-    transform: translate3d(0, 0, 0) rotateZ(0);
+    transform: translate3d(5px, 5px, 0) rotateZ(0);
   }
 
   100% {
