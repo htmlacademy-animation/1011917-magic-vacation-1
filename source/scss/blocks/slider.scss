@@ -154,7 +154,7 @@
   position: relative;
   width: 4rem;
   height: 4rem;
-  color: $c-dark;
+  color: var(--state-main);
 
   @media (min-width: $stop-scaling) {
     width: 40px;
@@ -173,7 +173,10 @@
   }
 
   svg {
-    @include center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: block;
     width: 1rem;
     height: 2rem;
@@ -186,7 +189,7 @@
   }
 
   &:hover {
-    color: $c-purple;
+    color: var(--state-second);
 
     &::before {
       width: 112.5%;
@@ -195,11 +198,11 @@
   }
 
   &:focus {
-    color: $c-purple;
+    color: var(--state-second);
     outline: none;
 
     &::before {
-      border-color: $c-purple;
+      border-color: var(--state-second);
     }
   }
 
@@ -210,14 +213,30 @@
     &::before {
       width: 100%;
       height: 100%;
-      background-color: $c-purple;
-      border-color: $c-purple;
+      background-color: var(--state-second);
+      border-color: var(--state-second);
     }
   }
 
   &.swiper-button-disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  &--prev {
+    animation: history-slider-roll-left 2.5s ease-out;
+
+    &>svg {
+      animation: arrow-rotate-left 2.5s cubic-bezier(0.25, 0.1, 0, 1.55);
+    }
+  }
+
+  &--next {
+    animation: history-slider-roll-right 2.5s ease-out;
+
+    &>svg {
+      animation: arrow-rotate-right 2.5s cubic-bezier(0.25, 0.1, 0, 1.55);
+    }
   }
 }
 
@@ -283,4 +302,67 @@
 
 .swiper-slide-next .slider__item-text {
   animation: text-focus-in 1.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) 1s both;
+}
+
+.slide2-active {
+  --state-main: #4875e6;
+  --state-second: #a8cefb;
+}
+
+.slide3-active {
+  --state-main: #a8cefb;
+  --state-second: #4875e6;
+}
+
+.result__button {
+  opacity: 0;
+  animation-name: opacity;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+
+  span {
+    --space: 3rem;
+    --deg: 90deg;
+    animation-name: roll;
+    animation-duration: 0.8s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+  }
+}
+
+.screen--prizes.active .screen__footer {
+  transform: translateY(100%);
+  animation-name: upContent;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+.screen--prizes .screen__footer p {
+  transition: 0.5s;
+}
+
+.screen--prizes:not(.active) .screen__footer p {
+  opacity: 0;
+}
+
+.screen--rules .disclaimer ul {
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.screen--rules.active .disclaimer ul {
+  opacity: 1;
+}
+
+.screen--rules .screen__disclaimer {
+  transform: translateY(0);
+}
+
+.screen--rules:not(.active) .screen__disclaimer {
+  animation-name: hideContent;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
 }
