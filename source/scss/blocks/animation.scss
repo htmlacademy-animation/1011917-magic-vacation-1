@@ -138,6 +138,17 @@
   }
 }
 
+@keyframes opacity-out {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 @keyframes opacity-delay {
   0% {
     opacity: 0;
