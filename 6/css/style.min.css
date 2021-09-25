@@ -1140,6 +1140,16 @@ img {
     visibility: visible;
   }
 }
+@keyframes opacity-out {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
 @keyframes opacity-delay {
   0% {
     opacity: 0;
@@ -1653,6 +1663,7 @@ img {
   text-transform: uppercase;
   font-size: 1.2rem;
   line-height: 1.2;
+  animation: opacity 0.3s linear;
 }
 @media (min-width: 2000px) {
   .disclaimer ul {
@@ -3702,6 +3713,10 @@ body.screen--toggling::before {
   transition: height 0.4s ease;
 }
 
+.screen--prizes.will-destroy .screen__footer-note {
+  animation: opacity-out 0.3s linear;
+}
+
 .screen {
   position: relative;
   display: flex;
@@ -3778,9 +3793,18 @@ body.screen--toggling::before {
   transform: translateY(100%);
   transition: opacity 0.5s cubic-bezier(0.26, 1.26, 1, 0.65), transform 0.5s cubic-bezier(0.26, 1.26, 1, 0.65);
 }
-.body--loaded .active .screen__footer {
+.body--loaded .active .screen__footer, .show-footer .screen__footer, .active-footer .show .screen__footer {
   transform: translateY(0);
   opacity: 1;
+}
+@media (max-width: 1024px) and (orientation: portrait), (max-width: 768px) and (orientation: landscape) {
+  .screen__footer {
+    transition-property: width, height;
+    transition-duration: 0.3s;
+  }
+  .screen__footer.screen__footer--full {
+    transition-duration: 0.45s;
+  }
 }
 @media (max-width: 1024px) and (orientation: portrait) {
   .screen__footer {
@@ -3809,6 +3833,7 @@ body.screen--toggling::before {
   margin: 0 auto;
   padding: 0 4rem;
   width: 100%;
+  transition-property: opacity;
 }
 @media (min-width: 2000px) {
   .screen__footer-wrapper {
@@ -3825,20 +3850,27 @@ body.screen--toggling::before {
     padding: 0 1rem;
   }
 }
-@media (max-width: 1024px) and (orientation: portrait) {
+@media (max-width: 1024px) and (orientation: portrait), (max-width: 768px) and (orientation: landscape) {
   .screen__footer-wrapper {
     opacity: 0;
+    transition: opacity 20ms ease;
   }
   .screen__footer--full .screen__footer-wrapper {
+    transition-duration: 0.3s;
+    transition-delay: 0.35s;
     opacity: 1;
   }
 }
-@media (max-width: 768px) and (orientation: landscape) {
-  .screen__footer-wrapper {
+@media (min-width: 1025px) and (orientation: landscape) {
+  .active-footer .screen__footer-wrapper {
     opacity: 0;
+    transition-duration: 0.5s;
   }
-  .screen__footer--full .screen__footer-wrapper {
+  .active-footer .active .screen__footer-wrapper {
     opacity: 1;
+  }
+  .show:not(.active) .screen__footer-wrapper {
+    opacity: 0;
   }
 }
 
@@ -3861,21 +3893,15 @@ body.screen--toggling::before {
 .screen__footer-enlarge:focus {
   outline: none;
 }
-@media (max-width: 1024px) and (orientation: portrait) {
+@media (max-width: 1024px) and (orientation: portrait), (max-width: 768px) and (orientation: landscape) {
   .screen__footer-enlarge {
     display: block;
+    transition: opacity 0.3s ease 0.15s;
   }
   .screen__footer--full .screen__footer-enlarge {
     opacity: 0;
-    pointer-events: none;
-  }
-}
-@media (max-width: 768px) and (orientation: landscape) {
-  .screen__footer-enlarge {
-    display: block;
-  }
-  .screen__footer--full .screen__footer-enlarge {
-    opacity: 0;
+    transition-duration: 0.1s;
+    transition-delay: 0s;
     pointer-events: none;
   }
 }
@@ -3907,24 +3933,16 @@ body.screen--toggling::before {
 .screen__footer-collapse:focus {
   outline: none;
 }
-@media (max-width: 1024px) and (orientation: portrait) {
+@media (max-width: 1024px) and (orientation: portrait), (max-width: 768px) and (orientation: landscape) {
   .screen__footer-collapse {
     display: block;
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.1s ease;
   }
   .screen__footer--full .screen__footer-collapse {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-@media (max-width: 768px) and (orientation: landscape) {
-  .screen__footer-collapse {
-    display: block;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .screen__footer--full .screen__footer-collapse {
+    transition-duration: 0.3s;
+    transition-delay: 0.35s;
     opacity: 1;
     pointer-events: auto;
   }
