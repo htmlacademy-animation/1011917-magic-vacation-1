@@ -224,18 +224,18 @@
   }
 
   &--prev {
-    animation: history-slider-roll-left 2.5s ease-out;
+    animation: history-slider-roll-left 2.2s ease-out;
 
     &>svg {
-      animation: arrow-rotate-left 2.5s cubic-bezier(0.25, 0.1, 0, 1.55);
+      animation: arrow-rotate-left 2.2s cubic-bezier(0.25, 0.1, 0, 1.55);
     }
   }
 
   &--next {
-    animation: history-slider-roll-right 2.5s ease-out;
+    animation: history-slider-roll-right 2.2s ease-out;
 
     &>svg {
-      animation: arrow-rotate-right 2.5s cubic-bezier(0.25, 0.1, 0, 1.55);
+      animation: arrow-rotate-right 2.2s cubic-bezier(0.25, 0.1, 0, 1.55);
     }
   }
 }
