@@ -32,6 +32,14 @@ body {
   }
 }
 
+.screen--prizes {
+  &.will-destroy {
+    .screen__footer-note {
+      animation: opacity-out 0.3s linear;
+    }
+  }
+}
+
 .screen {
   position: relative;
   display: flex;
@@ -87,7 +95,9 @@ body {
   transition-duration: 0.5s;
   transition-delay: 0.6s;
 
-  .body--loaded .active & {
+  .body--loaded .active &,
+  .show-footer &,
+  .active-footer .show & {
     transform: translateY(0);
     opacity: 1;
   }
@@ -95,6 +105,16 @@ body {
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.5s $half-time-large-distance, transform 0.5s $half-time-large-distance;
+
+  @media (max-width: $tablet) and (orientation: portrait),
+  (max-width: $mobile) and (orientation: landscape)  {
+    transition-property: width, height;
+    transition-duration: 0.3s;
+
+    &.screen__footer--full {
+      transition-duration: 0.45s;
+    }
+  }
 
   @media (max-width: $tablet) and (orientation: portrait) {
     width: 3.5rem;
@@ -121,20 +141,32 @@ body {
 
 .screen__footer-wrapper {
   @include container;
+  transition-property: opacity;
 
-  @media (max-width: $tablet) and (orientation: portrait) {
+  @media (max-width: $tablet) and (orientation: portrait),
+  (max-width: $mobile) and (orientation: landscape) {
     opacity: 0;
+    transition: opacity 20ms ease;
 
     .screen__footer--full & {
+      transition-duration: 0.3s;
+      transition-delay: 0.35s;
       opacity: 1;
     }
   }
 
-  @media (max-width: $mobile) and (orientation: landscape) {
-    opacity: 0;
+  @media (min-width: $tablet + 1px) and (orientation: landscape) {
+    .active-footer & {
+      opacity: 0;
+      transition-duration: 0.5s;
+    }
 
-    .screen__footer--full & {
+    .active-footer .active & {
       opacity: 1;
+    }
+
+    .show:not(.active) & {
+      opacity: 0;
     }
   }
 }
@@ -150,20 +182,15 @@ body {
   color: $c-dark;
   z-index: 1;
 
-  @media (max-width: $tablet) and (orientation: portrait) {
+  @media (max-width: $tablet) and (orientation: portrait),
+  (max-width: $mobile) and (orientation: landscape) {
     display: block;
+    transition: opacity 0.3s ease 0.15s;
 
     .screen__footer--full & {
       opacity: 0;
-      pointer-events: none;
-    }
-  }
-
-  @media (max-width: $mobile) and (orientation: landscape) {
-    display: block;
-
-    .screen__footer--full & {
-      opacity: 0;
+      transition-duration: 0.1s;
+      transition-delay: 0s;
       pointer-events: none;
     }
   }
@@ -189,23 +216,16 @@ body {
   color: $c-dark;
   z-index: 1;
 
-  @media (max-width: $tablet) and (orientation: portrait) {
+  @media (max-width: $tablet) and (orientation: portrait),
+  (max-width: $mobile) and (orientation: landscape) {
     display: block;
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.1s ease;
 
     .screen__footer--full & {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
-
-  @media (max-width: $mobile) and (orientation: landscape) {
-    display: block;
-    opacity: 0;
-    pointer-events: none;
-
-    .screen__footer--full & {
+      transition-duration: 0.3s;
+      transition-delay: 0.35s;
       opacity: 1;
       pointer-events: auto;
     }
@@ -420,4 +440,3 @@ body {
     transform: translate3d(0, 1rem, 0);
   }
 }
-

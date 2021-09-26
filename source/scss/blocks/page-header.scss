@@ -116,13 +116,13 @@ body {
     position: absolute;
     right: 0.8rem;
     height: 1px;
-    background-color: $c-dark;
+    background-color: var(--state-main);
   }
 
   &::before {
     top: 0.9rem;
     width: 1rem;
-    box-shadow: 0 0.6rem 0 0 $c-dark;
+    box-shadow: 0 0.6rem 0 0 var(--state-main);
   }
 
   &::after {
@@ -186,7 +186,7 @@ body {
     align-items: flex-start;
     padding: 2rem 3.5rem;
     max-height: calc(var(--vh, 1vh) * 100);
-    color: $c-dark;
+    color: var(--state-main);
     background-color: $c-light;
     overflow-y: auto;
 
@@ -211,13 +211,13 @@ body {
   @media (max-width: $tablet) and (orientation: portrait) {
     margin: auto 0;
     font-size: 2.4rem;
-    color: $c-dark;
+    color: var(--state-main);
   }
 
   @media (max-width: $mobile) and (orientation: landscape) {
     margin: auto 0;
     font-size: 1.4rem;
-    color: $c-dark;
+    color: var(--state-main)
   }
 
   ul {
@@ -282,13 +282,13 @@ body {
       @media (max-width: $tablet) and (orientation: portrait) {
         left: 0;
         right: 0;
-        background-color: $c-dark;
+        background-color: var(--state-main);
       }
 
       @media (max-width: $mobile) and (orientation: landscape) {
         left: 0;
         right: 0;
-        background-color: $c-dark;
+        background-color: var(--state-main);
       }
     }
 
@@ -300,12 +300,12 @@ body {
 
     &:hover,
     &:focus {
-      color: $c-purple;
+      color: var(--state-second);
       outline: none;
 
       &::after {
         opacity: 1;
-        background-color: $c-purple;
+        background-color: var(--state-second);
         width: 100%;
       }
     }
