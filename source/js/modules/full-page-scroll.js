@@ -1,5 +1,6 @@
 import throttle from 'lodash/throttle';
 import {GameTitleAccentTypography, TitleAccentTypography, DateAccentTypography, PrizesTitleAccentTypography, StoryTitleAccentTypography, RulesTitleAccentTypography} from './intro';
+import controlSmil from './smil';
 
 export default class FullPageScroll {
   constructor() {
@@ -55,6 +56,7 @@ export default class FullPageScroll {
     if (isPrizesScreenActive) {
       this.screenElements.forEach((screen) => {
         this.fillScreen.classList.add(`active`);
+        controlSmil(this.screenElements[this.activeScreen].id);
         setTimeout(() => this.hideScreen(screen), 650);
       });
 
