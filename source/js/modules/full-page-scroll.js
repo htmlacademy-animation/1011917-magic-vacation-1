@@ -56,12 +56,16 @@ export default class FullPageScroll {
     if (isPrizesScreenActive) {
       this.screenElements.forEach((screen) => {
         this.fillScreen.classList.add(`active`);
-        controlSmil(this.screenElements[this.activeScreen].id);
         setTimeout(() => this.hideScreen(screen), 650);
       });
 
       this.fillScreen.classList.add(`active`);
-      setTimeout(() => this.showScreen(this.screenElements[this.activeScreen]), 650);
+      setTimeout(() => {
+        this.showScreen(this.screenElements[this.activeScreen]);
+      }, 650);
+      setTimeout(() => {
+        controlSmil(this.screenElements[this.activeScreen].id);
+      }, 1200);
     } else if (isRulesScreenActive) {
       this.prizesScreen.classList.add(`will-destroy`);
 
