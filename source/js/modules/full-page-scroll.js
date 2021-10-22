@@ -1,6 +1,7 @@
 import throttle from 'lodash/throttle';
 import {GameTitleAccentTypography, TitleAccentTypography, DateAccentTypography, PrizesTitleAccentTypography, StoryTitleAccentTypography, RulesTitleAccentTypography} from './intro';
 import controlSmil from './smil';
+import Timer from './timer.js';
 
 export default class FullPageScroll {
   constructor() {
@@ -15,6 +16,9 @@ export default class FullPageScroll {
     this.activeScreen = 0;
     this.onScrollHandler = this.onScroll.bind(this);
     this.onUrlHashChengedHandler = this.onUrlHashChanged.bind(this);
+
+    const gameContainer = document.getElementById(`game__counter`);
+    this.gameTimer = new Timer(gameContainer);
   }
 
   init() {
@@ -51,6 +55,7 @@ export default class FullPageScroll {
   changeVisibilityDisplay() {
     const isPrizesScreenActive = this.activeScreen === 2;
     const isRulesScreenActive = this.activeScreen === 3;
+    const isGameScreenActive = this.activeScreen === 4;
 
 
     if (isPrizesScreenActive) {
@@ -79,6 +84,15 @@ export default class FullPageScroll {
         this.showScreen(this.screenElements[this.activeScreen]);
         this.prizesScreen.classList.remove(`will-destroy`);
       }, 300);
+    } else if (isGameScreenActive) {
+      this.screenElements.forEach((screen) => {
+        this.fillScreen.classList.remove(`active`);
+        this.hideScreen(screen);
+      });
+
+      this.gameTimer.startTimer();
+      this.fillScreen.classList.remove(`active`);
+      this.showScreen(this.screenElements[this.activeScreen]);
     } else {
       this.screenElements.forEach((screen) => {
         this.fillScreen.classList.remove(`active`);
