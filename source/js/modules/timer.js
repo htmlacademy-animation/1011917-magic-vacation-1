@@ -1,53 +1,58 @@
-export default class Timer {
-  constructor(gameContainer) {
-    this._TIME = 5 * 60 * 1000;
-    this._minContainer = gameContainer.children[0];
-    this._secContainer = gameContainer.children[1];
-    this._fpsInterval = 1000 / 60;
-    this._then = Date.now();
-  }
+const counter = document.querySelector(`.game__counter`);
+const minEl = counter.querySelector(`.minutes`);
+const secEl = counter.querySelector(`.seconds`);
+const maxTime = 5 * 60 * 1000;
+let remainTime = maxTime;
+let reqId;
 
-  startTimer() {
-    this._start = Date.now();
-    this.tick();
-  }
+function getValue(value) {
+  return String(value).length === 1 ? `0${value}` : value;
+}
 
-  stopTimer() {
-    cancelAnimationFrame(this.tickerRequest);
-  }
+function setTimer(setTime) {
+  const minuteVal = Math.floor(setTime / (60 * 1000));
+  const seccondVal = Math.floor((setTime % (60 * 1000)) / 1000);
 
-  tick() {
-    this.tickerRequest = requestAnimationFrame(() => {
-      const now = Date.now();
-      let time = this._TIME - (now - this._start);
-      let min = Math.floor(time / 1000 / 60);
-      let sec = Math.floor((time / 1000) % 60);
+  minEl.innerText = getValue(minuteVal);
+  secEl.innerText = getValue(seccondVal);
+}
 
-      const elapsed = now - this._then;
+function runTimer(callback) {
+  let now;
+  let then = Date.now();
+  let elapsed;
 
-      if (elapsed > this._fpsInterval) {
-        this._then = now - (elapsed % this._fpsInterval);
-        this.draw(min, sec);
+  const tick = () => {
+    reqId = requestAnimationFrame(tick);
 
-        if (min === 0 && sec === 0) {
-          this.stopTimer();
-          return;
-        }
+    now = Date.now();
+    elapsed = now - then;
+
+    if (remainTime <= 0) {
+      cancelAnimationFrame(reqId);
+      if (callback) {
+        callback();
       }
-      this.tick();
-    });
-  }
+    } else if (elapsed >= 1000) {
+      then = now - (elapsed % 1000);
+      remainTime -= 1000;
+      setTimer(remainTime);
+    }
+  };
 
-  draw(min, sec) {
-    if (min < 10) {
-      this._minContainer.innerText = `0${min}`;
-    } else {
-      this._minContainer.innerText = min;
-    }
-    if (sec < 10) {
-      this._secContainer.innerText = `0${sec}`;
-    } else {
-      this._secContainer.innerText = sec;
-    }
+  reqId = requestAnimationFrame(tick);
+}
+
+function resetTimer() {
+  if (reqId) {
+    cancelAnimationFrame(reqId);
+    setTimer(maxTime);
+    reqId = null;
+    remainTime = maxTime;
   }
 }
+
+export {
+  runTimer,
+  resetTimer
+};
