@@ -2,6 +2,7 @@ import throttle from 'lodash/throttle';
 import {GameTitleAccentTypography, TitleAccentTypography, DateAccentTypography, PrizesTitleAccentTypography, StoryTitleAccentTypography, RulesTitleAccentTypography} from './intro';
 import controlSmil from './smil';
 import {runTimer, resetTimer} from './timer.js';
+import {runCounters, resetCounters} from './prizes-counter.js';
 
 export default class FullPageScroll {
   constructor() {
@@ -62,13 +63,21 @@ export default class FullPageScroll {
       });
 
       this.fillScreen.classList.add(`active`);
+
+      // game counter starter
       resetTimer();
+
       setTimeout(() => {
         this.showScreen(this.screenElements[this.activeScreen]);
       }, 650);
       setTimeout(() => {
         controlSmil(this.screenElements[this.activeScreen].id);
       }, 1200);
+
+      setTimeout(() => {
+        // prizes counter starter
+        runCounters();
+      }, 2000);
     } else if (isRulesScreenActive) {
       this.prizesScreen.classList.add(`will-destroy`);
 
@@ -78,7 +87,10 @@ export default class FullPageScroll {
       });
 
       this.fillScreen.classList.remove(`active`);
+
       resetTimer();
+      resetCounters();
+
       setTimeout(() => {
         this.showScreen(this.screenElements[this.activeScreen]);
         this.prizesScreen.classList.remove(`will-destroy`);
@@ -90,6 +102,8 @@ export default class FullPageScroll {
       });
 
       runTimer();
+      resetCounters();
+
       this.fillScreen.classList.remove(`active`);
       this.showScreen(this.screenElements[this.activeScreen]);
     } else {
@@ -99,6 +113,8 @@ export default class FullPageScroll {
       });
 
       resetTimer();
+      resetCounters();
+
       this.fillScreen.classList.remove(`active`);
       this.showScreen(this.screenElements[this.activeScreen]);
     }
