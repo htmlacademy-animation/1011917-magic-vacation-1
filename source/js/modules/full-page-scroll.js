@@ -77,7 +77,7 @@ export default class FullPageScroll {
       setTimeout(() => {
         // prizes counter starter
         runCounters();
-      }, 2000);
+      }, 1600);
     } else if (isRulesScreenActive) {
       this.prizesScreen.classList.add(`will-destroy`);
 

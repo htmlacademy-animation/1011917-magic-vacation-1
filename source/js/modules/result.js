@@ -1,3 +1,5 @@
+import seacalfScene from './seacalfCanvas.js';
+
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
   let results = document.querySelectorAll(`.screen--result`);
@@ -14,6 +16,13 @@ export default () => {
         });
         targetEl[0].classList.add(`screen--show`);
         targetEl[0].classList.remove(`screen--hidden`);
+
+        // eslint-disable-next-line new-cap
+        let seacalfCanvasAnimate = new seacalfScene({
+          canvas: document.querySelector(`#seacalf-canvas`)
+        });
+
+        seacalfCanvasAnimate.startAnimation();
       });
     }
 

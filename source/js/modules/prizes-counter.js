@@ -1,6 +1,6 @@
 const counters = [...document.querySelectorAll(`.prizes__desc b`)];
 const FPS = 12;
-const F_INTERVAL = 2000 / FPS;
+const F_INTERVAL = 1000 / FPS;
 const MAX_F = 6;
 
 let reqId;
