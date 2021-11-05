@@ -1,4 +1,5 @@
-import seacalfScene from './seacalfCanvas.js';
+import seacalfScene from "./seacalfCanvas.js";
+import ResultFail from "./crocodile-animation.js";
 
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
@@ -17,12 +18,24 @@ export default () => {
         targetEl[0].classList.add(`screen--show`);
         targetEl[0].classList.remove(`screen--hidden`);
 
-        // eslint-disable-next-line new-cap
-        let seacalfCanvasAnimate = new seacalfScene({
-          canvas: document.querySelector(`#seacalf-canvas`)
-        });
+        switch (target) {
+          case `result`:
+            // eslint-disable-next-line new-cap
+            let seacalfCanvasAnimate = new seacalfScene({
+              canvas: document.querySelector(`#seacalf-canvas`),
+            });
 
-        seacalfCanvasAnimate.startAnimation();
+            seacalfCanvasAnimate.startAnimation();
+
+            break;
+          case `result3`:
+            const animationResult3 = new ResultFail({
+              canvas: `#result3_canvas`,
+            });
+            animationResult3.startAnimation();
+
+            break;
+        }
       });
     }
 
