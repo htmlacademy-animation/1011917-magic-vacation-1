@@ -3,6 +3,7 @@ import Story from './three/story.js';
 
 export default () => {
   let storySlider;
+  let storyKey = false;
   const story = new Story();
 
   const setSlider = function () {
@@ -75,17 +76,19 @@ export default () => {
     if (storySlider) {
       storySlider.destroy();
     }
-    document.body.addEventListener(`screenChanged`, (e) => {
-      if (e.detail.screenName === `story`) {
-        story.setScene(0);
-      }
-    });
+
     setSlider();
+
+    if (storyKey) {
+      story.setScene(0);
+    }
   });
 
   document.body.addEventListener(`screenChanged`, (e) => {
     if (e.detail.screenName === `story`) {
       story.init();
+
+      storyKey = true;
 
       if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
         story.setScene(0);
