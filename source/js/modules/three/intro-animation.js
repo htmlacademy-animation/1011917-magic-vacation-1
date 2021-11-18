@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import bubbleRawShaderMaterial from '../three/bubbleRawShaderMaterial';
+import bubbleRawShaderMaterial from './bubbleRawShaderMaterial';
 
 export default class Intro {
   constructor() {
