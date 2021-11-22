@@ -1,5 +1,5 @@
 import Swiper from "swiper";
-import Story from './three/story.js';
+import {Story} from './three/story.js';
 
 export default () => {
   let storySlider;
