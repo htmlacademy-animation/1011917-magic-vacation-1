@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 import bubbleRawShaderMaterial from './bubbleRawShaderMaterial';
+import {animationFPS} from './FPSAnimation';
 
-export default class Story {
+export let activeScene;
+let animHueKey = false;
+
+export class Story {
   constructor() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -11,7 +15,20 @@ export default class Story {
     this.canvasID = `screen__canvas--story`;
     this.textures = [
       {src: `./img/module-5/scenes-textures/scene-1.png`, options: {hue: 0.0}},
-      {src: `./img/module-5/scenes-textures/scene-2.png`, options: {hue: -0.3, isMagnifier: true}},
+      {
+        src: `./img/module-5/scenes-textures/scene-2.png`, options: {
+          hue: 0.1,
+          isMagnifier: true,
+          animationSettings: {
+            hue: {
+              initalHue: 0.1,
+              finalHue: -0.5,
+              duration: 1500,
+              variation: 0.3,
+            },
+          }
+        }
+      },
       {src: `./img/module-5/scenes-textures/scene-3.png`, options: {hue: 0.0}},
       {src: `./img/module-5/scenes-textures/scene-4.png`, options: {hue: 0.0}},
     ];
@@ -114,8 +131,47 @@ export default class Story {
     };
   }
 
+  resetHueShift() {
+    this.textures[1].options.hue = this.textures[1].options.hue;
+  }
+
+  hueShiftIntensityAnimationTick(from, to) {
+    return (progress) => {
+      let hueShift;
+      if (progress < 0.5) {
+        hueShift = from + progress * (to - from);
+      } else {
+        hueShift = to + progress * (from - to);
+      }
+      this.textures[1].options.hue = hueShift;
+    };
+  }
+
+  animateHueShift() {
+    const {initalHue, finalHue, duration, variation} = this.textures[1].options.animationSettings.hue;
+
+    const offset = (Math.random() * variation * 2 + (1 - variation));
+
+    let anim = () => {
+      animationFPS(this.hueShiftIntensityAnimationTick(initalHue, finalHue * offset), duration * offset, 30, () => {
+        if (activeScene === 1) {
+          anim();
+        }
+      });
+    };
+
+    anim();
+
+  }
+
   render() {
     this.renderer.render(this.scene, this.camera);
+
+    if (activeScene === 1) {
+      requestAnimationFrame(this.render);
+    } else {
+      cancelAnimationFrame(this.render);
+    }
   }
 
   updateSize() {
@@ -135,6 +191,17 @@ export default class Story {
 
   setScene(sceneID) {
     this.camera.position.x = this.textureWidth * sceneID;
+    activeScene = sceneID;
     this.render();
+
+    if (sceneID === 1) {
+      if (animHueKey !== true) {
+        animHueKey = true;
+        this.resetHueShift();
+        this.animateHueShift();
+      }
+    } else {
+      animHueKey = false;
+    }
   }
 }
