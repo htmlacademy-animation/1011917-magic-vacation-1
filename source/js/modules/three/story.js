@@ -23,8 +23,8 @@ export class Story {
             hue: {
               initalHue: 0.1,
               finalHue: -0.5,
-              duration: 1500,
-              variation: 0.3,
+              duration: 2500,
+              variation: 0.2,
             },
           }
         }
@@ -40,25 +40,35 @@ export class Story {
     this.bubbleGlareOffset = 0.8;
     this.bubbleGlareStartRadianAngle = 2;
     this.bubbleGlareEndRadianAngle = 2.8;
+    this.bubblesDuration = 3000;
 
     this.bubbles = [
       {
-        radius: 150.0,
-        position: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y - this.height * 0.5],
+        radius: this.width * 0.1,
+        initialPosition: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y - this.height * 1.8],
+        position: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y - this.height * 1.8],
+        finalPosition: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y + this.height * 1.8],
+        amplitude: 80,
         glareOffset: this.bubbleGlareOffset,
         glareAngleStart: this.bubbleGlareStartRadianAngle,
         glareAngleEnd: this.bubbleGlareEndRadianAngle
       },
       {
-        radius: 120.0,
-        position: [this.canvasCenter.x - this.width * 0.18, this.canvasCenter.y],
+        radius: this.width * 0.15,
+        initialPosition: [this.canvasCenter.x - this.width * 0.18, this.canvasCenter.y - this.height * 1.3],
+        position: [this.canvasCenter.x - this.width * 0.18, this.canvasCenter.y - this.height * 1.3],
+        finalPosition: [this.canvasCenter.x - this.width * 0.18, this.canvasCenter.y + this.height * 2.6],
+        amplitude: -100,
         glareOffset: this.bubbleGlareOffset,
         glareAngleStart: this.bubbleGlareStartRadianAngle,
         glareAngleEnd: this.bubbleGlareEndRadianAngle
       },
       {
-        radius: 100.0,
-        position: [this.canvasCenter.x, this.canvasCenter.y + this.height * 0.95],
+        radius: this.width * 0.05,
+        initialPosition: [this.canvasCenter.x, this.canvasCenter.y - this.height * 2],
+        position: [this.canvasCenter.x, this.canvasCenter.y - this.height * 2],
+        finalPosition: [this.canvasCenter.x, this.canvasCenter.y + this.height * 1.2],
+        amplitude: 60,
         glareOffset: this.bubbleGlareOffset,
         glareAngleStart: this.bubbleGlareStartRadianAngle,
         glareAngleEnd: this.bubbleGlareEndRadianAngle
@@ -161,7 +171,38 @@ export class Story {
     };
 
     anim();
+  }
 
+  resetBubbles() {
+    this.bubbles.forEach((_, index) => {
+      this.bubbles[index].position = [...this.bubbles[index].initialPosition];
+    });
+  }
+
+  bubblePositionAnimationTick(bubble, from, to) {
+    return (progress) => {
+      const y = from[1] + progress * (to[1] - from[1]);
+      const offset = bubble.amplitude * Math.pow(1 - progress, 1) * Math.sin(progress * Math.PI * 10);
+      const x = (offset + bubble.initialPosition[0]);
+
+      bubble.position = [x, y];
+    };
+  }
+
+  animateBubbles(index) {
+    let anim = () => {
+      animationFPS(
+          this.bubblePositionAnimationTick(this.bubbles[index], this.bubbles[index].initialPosition, this.bubbles[index].finalPosition),
+          this.bubblesDuration,
+          30,
+          () => {
+            if (activeScene === 1) {
+              anim();
+            }
+          }
+      );
+    };
+    anim();
   }
 
   render() {
@@ -197,8 +238,15 @@ export class Story {
     if (sceneID === 1) {
       if (animHueKey !== true) {
         animHueKey = true;
+
         this.resetHueShift();
         this.animateHueShift();
+
+        this.resetBubbles();
+        this.animateBubbles(0);
+        this.animateBubbles(1);
+        this.animateBubbles(2);
+
       }
     } else {
       animHueKey = false;
