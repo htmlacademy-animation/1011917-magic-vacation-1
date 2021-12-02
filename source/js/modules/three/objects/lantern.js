@@ -50,7 +50,7 @@ class Lantern extends THREE.Group {
   addCentreCylinder() {
     const topOffset = this.cylinderMesh.position.y + this.cylinderMesh.geometry.parameters.height / 2 + this.centerCylinder.parameters.height / 2;
     this.centerCylinderMesh.position.set(0, topOffset, 0);
-    this.add(this.centreCylinderMesh);
+    this.add(this.centerCylinderMesh);
   }
 
   addBox() {
