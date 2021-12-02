@@ -2,8 +2,20 @@ import * as THREE from 'three';
 import bubbleRawShaderMaterial from './bubbleRawShaderMaterial';
 import {animationFPS} from './FPSAnimation';
 
+import StoryScene1 from './storyScenes/storyScene1.js';
+import StoryScene2 from './storyScenes/storyScene2.js';
+
 export let activeScene;
 let animHueKey = false;
+
+export const setMaterial = (options = {}) => {
+  const {color, ...other} = options;
+
+  return new THREE.MeshStandardMaterial({
+    color: new THREE.Color(color),
+    ...other
+  });
+};
 
 export class Story {
   constructor() {
@@ -27,9 +39,13 @@ export class Story {
               variation: 0.2,
             },
           }
-        }
+        },
+        scene: new StoryScene1()
       },
-      {src: `./img/module-5/scenes-textures/scene-3.png`, options: {hue: 0.0}},
+      {src: `./img/module-5/scenes-textures/scene-3.png`,
+        options: {hue: 0.0},
+        scene: new StoryScene2()
+      },
       {src: `./img/module-5/scenes-textures/scene-4.png`, options: {hue: 0.0}},
     ];
     this.textureWidth = 2048;
@@ -98,31 +114,18 @@ export class Story {
     return {};
   }
 
-  setSphere() {
-    const geometry = new THREE.SphereGeometry(100, 50, 50);
-
-    const material = new THREE.MeshStandardMaterial({
-      color: 0x4169e1,
-      metalness: 0.05,
-      emissive: 0x0,
-      roughness: 0.5
-    });
-
-    return new THREE.Mesh(geometry, material);
-  }
-
   setLights() {
     const lightsGroup = new THREE.Group();
 
-    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.84);
+    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.20);
     directionalLight.position.set(0, this.position.z * Math.tan(-15 * THREE.Math.DEG2RAD), this.position.z);
     lightsGroup.add(directionalLight);
 
-    let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.60, 975, 2.0);
+    let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.50, 3000, 0.5);
     pointLight1.position.set(-785, -350, 710);
     lightsGroup.add(pointLight1);
 
-    let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.95, 975, 2.0);
+    let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.50, 3000, 0.5);
     pointLight2.position.set(730, 800, 985);
     lightsGroup.add(pointLight2);
 
@@ -142,14 +145,14 @@ export class Story {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
 
-    this.camera = new THREE.PerspectiveCamera(35, this.cameraAspect, 0.1, 1200);
+    this.camera = new THREE.PerspectiveCamera(35, this.cameraAspect, 0.1, 1500);
     this.camera.position.z = this.position.z;
 
     this.scene = new THREE.Scene();
 
     const loadManager = new THREE.LoadingManager();
     const textureLoader = new THREE.TextureLoader(loadManager);
-    const loadedTextures = this.textures.map((texture) => ({src: textureLoader.load(texture.src), options: texture.options}));
+    const loadedTextures = this.textures.map((texture) => ({src: textureLoader.load(texture.src), options: texture.options, scene: texture.scene}));
 
     loadManager.onLoad = () => {
       loadedTextures.forEach((texture, index) => {
@@ -167,12 +170,14 @@ export class Story {
         image.scale.y = this.textureHeight;
         image.position.x = this.textureWidth * index;
 
-        const sphere = this.setSphere();
-        this.scene.add(sphere);
-
         const lights = this.setLights();
         lights.position.z = this.camera.position.z;
         this.scene.add(lights);
+
+        if (texture.scene) {
+          texture.scene.position.x = this.textureWidth * index;
+          this.scene.add(texture.scene);
+        }
 
         this.scene.add(image);
         this.render();
