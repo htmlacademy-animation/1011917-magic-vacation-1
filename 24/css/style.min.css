@@ -4975,36 +4975,36 @@ body.load .page-header__nav {
   transition-delay: 0ms;
 }
 #wrong-svg path:nth-child(2) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 27ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.527s paused;
-  transition-delay: 27ms;
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 21ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.521s paused;
+  transition-delay: 21ms;
 }
 #wrong-svg path:nth-child(3) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 66ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.566s paused;
-  transition-delay: 66ms;
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 56ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.556s paused;
+  transition-delay: 56ms;
 }
 #wrong-svg path:nth-child(4) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 111ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.611s paused;
-  transition-delay: 111ms;
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 78ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.578s paused;
+  transition-delay: 78ms;
 }
 #wrong-svg path:nth-child(5) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 144ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.644s paused;
-  transition-delay: 144ms;
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 84ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.584s paused;
+  transition-delay: 84ms;
 }
 #wrong-svg path:nth-child(6) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 195ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.695s paused;
-  transition-delay: 195ms;
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 110ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.61s paused;
+  transition-delay: 110ms;
 }
 #wrong-svg path:nth-child(7) {
   animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 162ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.662s paused;
   transition-delay: 162ms;
 }
 #wrong-svg path:nth-child(8) {
-  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 140ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.64s paused;
-  transition-delay: 140ms;
-}
-#wrong-svg path:nth-child(9) {
   animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 168ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.668s paused;
   transition-delay: 168ms;
+}
+#wrong-svg path:nth-child(9) {
+  animation: jumpInLetter 0.5s cubic-bezier(0.88, 0, 1, 1) 256ms forwards paused, jumpInLetter2 0.26s cubic-bezier(0.33, 0, 0.67, 1) 0.756s paused;
+  transition-delay: 256ms;
 }
 #wrong-svg path:nth-child(1) {
   stroke-dasharray: 0 150;
