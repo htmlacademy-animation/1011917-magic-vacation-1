@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import bubbleRawShaderMaterial from './bubbleRawShaderMaterial';
 import {animationFPS} from './FPSAnimation';
 
+import StoryScene0 from './storyScenes/storyScene0.js';
 import StoryScene1 from './storyScenes/storyScene1.js';
 import StoryScene2 from './storyScenes/storyScene2.js';
 
@@ -26,7 +27,10 @@ export class Story {
 
     this.canvasID = `screen__canvas--story`;
     this.textures = [
-      {src: `./img/module-5/scenes-textures/scene-1.png`, options: {hue: 0.0}},
+      {src: `./img/module-5/scenes-textures/scene-1.png`,
+        options: {hue: 0.0},
+        scene: new StoryScene0()
+      },
       {
         src: `./img/module-5/scenes-textures/scene-2.png`, options: {
           hue: 0.1,
