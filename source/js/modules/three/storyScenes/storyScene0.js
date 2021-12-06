@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 
 import SVGObject from '../svgObject.js';
+import Rug from '../objects/rug.js';
+import Chandelier from '../objects/chandelier.js';
 
 class StoryScene0 extends THREE.Group {
   constructor() {
@@ -11,6 +13,8 @@ class StoryScene0 extends THREE.Group {
 
   constructChildren() {
     this.loadFlower();
+    this.addRug();
+    this.addChandelier();
   }
 
   async loadFlower() {
@@ -20,6 +24,23 @@ class StoryScene0 extends THREE.Group {
     flower.scale.set(scale, -scale, scale);
     flower.rotation.copy(new THREE.Euler(0, 40 * THREE.Math.DEG2RAD, 5 * THREE.Math.DEG2RAD), `XYZ`);
     this.add(flower);
+  }
+
+  addRug() {
+    const rug = new Rug();
+    const scale = 0.7;
+
+    rug.scale.set(scale, scale, scale);
+    rug.position.set(0, -115, 0);
+    rug.rotation.copy(new THREE.Euler(13 * THREE.Math.DEG2RAD, -52 * THREE.Math.DEG2RAD, 0), `XYZ`);
+    this.add(rug);
+  }
+
+  addChandelier() {
+    const chandelier = new Chandelier();
+
+    chandelier.position.set(50, 240, 100);
+    this.add(chandelier);
   }
 }
 
