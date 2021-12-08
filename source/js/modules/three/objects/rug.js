@@ -1,33 +1,43 @@
 import * as THREE from 'three';
-import {setMaterial} from '../story.js';
+import {colors} from '../../colorsAndReflection.js';
+import rugShaderMaterial from '../materials/rugShaderMaterial.js';
 import {getLathePointsForCircle, getLatheDegrees} from '../latheGeometry.js';
 
 class Rug extends THREE.Group {
-  constructor() {
+  constructor(isDark) {
     super();
 
-    this.colorBase = 0x7a5ab2;
+    this.isDark = isDark;
 
     this.baseMesh = 0;
 
     this.startDeg = 16;
     this.finishDeg = 74;
 
+    this.colorBase = this.isDark ? colors.ShadowedLightPurple : colors.LightPurple;
+    this.colorStripe = this.isDark ? colors.ShadowedAdditionalPurple : colors.AdditionalPurple;
+
+    this.rugMesh = 0;
+
     this.constructChildren();
   }
 
   constructChildren() {
-    this.addBase();
+    this.addRug();
   }
 
-  addBase() {
+  addRug() {
     const points = getLathePointsForCircle(180, 3, 763);
     const {start, length} = getLatheDegrees(this.startDeg, this.finishDeg);
 
     const base = new THREE.LatheBufferGeometry(points, 50, start, length);
-    this.baseMesh = new THREE.Mesh(base, setMaterial({color: this.colorBase, flatShading: true}));
+    const material = new THREE.ShaderMaterial(rugShaderMaterial({
+      baseColor: {value: new THREE.Color(this.colorBase)},
+      stripeColor: {value: new THREE.Color(this.colorStripe)}
+    }));
+    this.rugMesh = new THREE.Mesh(base, material);
 
-    this.add(this.baseMesh);
+    this.add(this.rugMesh);
   }
 }
 

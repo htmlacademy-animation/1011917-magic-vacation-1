@@ -29,7 +29,7 @@ class StoryScene3 extends THREE.Group {
   }
 
   addRug() {
-    const rug = new Rug();
+    const rug = new Rug(this.isDark);
     const scale = 0.7;
 
     rug.scale.set(scale, scale, scale);
