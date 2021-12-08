@@ -1,20 +1,22 @@
 import * as THREE from 'three';
 import {setMaterial} from '../story.js';
+import {colors, reflectivity} from '../../colorsAndReflection.js';
 
 class Snowman extends THREE.Group {
   constructor() {
     super();
 
-    this.color = 0xffffff;
+    this.color1 = colors.SnowColor;
+    this.color2 = colors.Orange;
 
     this.bigCylinder = new THREE.SphereGeometry(75, 30, 30);
-    this.sphereBigMesh = new THREE.Mesh(this.bigCylinder, setMaterial({color: this.color}));
+    this.sphereBigMesh = new THREE.Mesh(this.bigCylinder, setMaterial({color: this.color1, ...reflectivity.strong}));
 
     this.smallCylinder = new THREE.SphereGeometry(44, 30, 30);
-    this.sphereSmallMesh = new THREE.Mesh(this.smallCylinder, setMaterial({color: this.color}));
+    this.sphereSmallMesh = new THREE.Mesh(this.smallCylinder, setMaterial({color: this.color1, ...reflectivity.strong}));
 
     this.cone = new THREE.ConeBufferGeometry(Math.hypot(18, 18) / 2, 75, 30);
-    this.coneMesh = new THREE.Mesh(this.cone, setMaterial({color: 0xFF4500}));
+    this.coneMesh = new THREE.Mesh(this.cone, setMaterial({color: this.color2, ...reflectivity.soft}));
 
     this.constructChildren();
   }

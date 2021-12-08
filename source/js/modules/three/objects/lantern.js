@@ -1,29 +1,32 @@
 import * as THREE from 'three';
 import {setMaterial} from '../story.js';
+import {colors, reflectivity} from '../../colorsAndReflection.js';
 
 class Lantern extends THREE.Group {
   constructor() {
     super();
 
     this.color = 0x0062c3;
+    this.color1 = colors.Blue;
+    this.color2 = colors.LightBlue;
 
     this.cylinder = new THREE.CylinderBufferGeometry(16, 16, 120, 30);
-    this.cylinderMesh = new THREE.Mesh(this.cylinder, setMaterial({color: this.color}));
+    this.cylinderMesh = new THREE.Mesh(this.cylinder, setMaterial({color: this.color1, ...reflectivity.soft}));
 
     this.sphere = new THREE.SphereGeometry(16, 30, 30);
-    this.sphereMesh = new THREE.Mesh(this.sphere, setMaterial({color: this.color, flatShading: true}));
+    this.sphereMesh = new THREE.Mesh(this.sphere, setMaterial({color: this.color1, ...reflectivity.soft, flatShading: true}));
 
     this.centerCylinder = new THREE.CylinderBufferGeometry(7, 7, 230, 30);
-    this.centerCylinderMesh = new THREE.Mesh(this.centerCylinder, setMaterial({color: this.color, flatShading: true}));
+    this.centerCylinderMesh = new THREE.Mesh(this.centerCylinder, setMaterial({color: this.color1, ...reflectivity.soft, flatShading: true}));
 
     this.box = new THREE.BoxBufferGeometry(37, 4, 37);
-    this.boxMesh = new THREE.Mesh(this.box, setMaterial({color: this.color, flatShading: true}));
+    this.boxMesh = new THREE.Mesh(this.box, setMaterial({color: this.color1, ...reflectivity.soft, flatShading: true}));
 
     this.trapezoid = new THREE.CylinderBufferGeometry(Math.hypot(42, 42) / 2, Math.hypot(34, 34) / 2, 60, 4);
-    this.trapezoidMesh = new THREE.Mesh(this.trapezoid, setMaterial({color: 0xabcdef, flatShading: true}));
+    this.trapezoidMesh = new THREE.Mesh(this.trapezoid, setMaterial({color: this.color1, ...reflectivity.soft, flatShading: true}));
 
     this.topTrapezoid = new THREE.CylinderBufferGeometry(Math.hypot(45, 45) / 2, Math.hypot(57, 57) / 2, 6, 4);
-    this.trapezoidTopMesh = new THREE.Mesh(this.topTrapezoid, setMaterial({color: this.color, flatShading: true}));
+    this.trapezoidTopMesh = new THREE.Mesh(this.topTrapezoid, setMaterial({color: this.color1, ...reflectivity.soft, flatShading: true}));
 
     this.constructChildren();
   }

@@ -5,6 +5,7 @@ import {animationFPS} from './FPSAnimation';
 import StoryScene0 from './storyScenes/storyScene0.js';
 import StoryScene1 from './storyScenes/storyScene1.js';
 import StoryScene2 from './storyScenes/storyScene2.js';
+import StoryScene3 from './storyScenes/storyScene3.js';
 
 export let activeScene;
 let animHueKey = false;
@@ -50,7 +51,10 @@ export class Story {
         options: {hue: 0.0},
         scene: new StoryScene2()
       },
-      {src: `./img/module-5/scenes-textures/scene-4.png`, options: {hue: 0.0}},
+      {src: `./img/module-5/scenes-textures/scene-4.png`,
+        options: {hue: 0.0},
+        scene: new StoryScene3()
+      },
     ];
     this.textureWidth = 2048;
     this.textureHeight = 1024;

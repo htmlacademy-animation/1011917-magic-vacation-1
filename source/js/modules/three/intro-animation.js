@@ -2,6 +2,7 @@ import * as THREE from "three";
 import bubbleRawShaderMaterial from "./bubbleRawShaderMaterial";
 
 import SVGObject from './svgObject.js';
+import {colors, reflectivity} from '../colorsAndReflection.js';
 
 export default class Intro {
   constructor() {
@@ -19,6 +20,33 @@ export default class Intro {
 
     this.render = this.render.bind(this);
     this.updateSize = this.updateSize.bind(this);
+  }
+
+  setMaterial(options = {}) {
+    const {color, ...other} = options;
+
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(color),
+      ...other
+    });
+  }
+
+  setLights() {
+    const lightsGroup = new THREE.Group();
+
+    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.10);
+    directionalLight.position.set(0, 1200 * Math.tan(-15 * THREE.Math.DEG2RAD), 1200);
+    lightsGroup.add(directionalLight);
+
+    let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.80, 3000, 0.5);
+    pointLight1.position.set(-785, -350, 0);
+    lightsGroup.add(pointLight1);
+
+    let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.30, 3000, 0.5);
+    pointLight2.position.set(730, 400, 0);
+    lightsGroup.add(pointLight2);
+
+    return lightsGroup;
   }
 
   init() {
@@ -65,7 +93,12 @@ export default class Intro {
       image.scale.x = this.textureWidth;
       image.scale.y = this.textureHeight;
 
+      const lights = this.setLights();
+      lights.position.z = this.camera.position.z;
+
+      this.scene.add(lights);
       this.scene.add(image);
+
       this.render();
     };
   }
@@ -76,12 +109,21 @@ export default class Intro {
     this.loadLeaf();
     this.loadQuestion();
     this.loadSnowflake();
+    this.addPlane();
+  }
+
+  addPlane() {
+    const plane = new THREE.PlaneGeometry(500, 500);
+    const planeMesh = new THREE.Mesh(plane, this.setMaterial({color: colors.Purple, ...reflectivity.basic, flatShading: true}));
+
+    planeMesh.position.set(0, 0, 5);
+    this.scene.add(planeMesh);
   }
 
   async loadKeyhole() {
     const keyhole = await new SVGObject(`keyhole`).getObject();
     const scale = 1.5;
-    keyhole.position.set(-1000 * scale, 1010 * scale, 0);
+    keyhole.position.set(-1000 * scale, 1010 * scale, 10);
     keyhole.scale.set(scale, -scale, scale);
     this.scene.add(keyhole);
   }
