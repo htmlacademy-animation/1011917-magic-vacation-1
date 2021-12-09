@@ -9,7 +9,6 @@ class StoryScene3 extends THREE.Group {
     super();
 
     this.isDark = true;
-
     this.constructChildren();
   }
 
@@ -31,7 +30,6 @@ class StoryScene3 extends THREE.Group {
   addRug() {
     const rug = new Rug(this.isDark);
     const scale = 0.7;
-
     rug.scale.set(scale, scale, scale);
     rug.position.set(0, -115, 0);
     rug.rotation.copy(new THREE.Euler(13 * THREE.Math.DEG2RAD, -52 * THREE.Math.DEG2RAD, 0), `XYZ`);
@@ -40,7 +38,6 @@ class StoryScene3 extends THREE.Group {
 
   addChandelier() {
     const chandelier = new Chandelier(this.isDark);
-
     chandelier.position.set(50, 240, 100);
     this.add(chandelier);
   }
