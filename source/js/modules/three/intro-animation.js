@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import bubbleRawShaderMaterial from "./bubbleRawShaderMaterial";
+import {OrbitControls} from '../../../../node_modules/three/examples/jsm/controls/OrbitControls.js';
 
 import SVGObject from './svgObject.js';
 import {colors, reflectivity} from '../colorsAndReflection.js';
@@ -38,7 +39,7 @@ export default class Intro {
   setLights() {
     const lightsGroup = new THREE.Group();
 
-    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.10);
+    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.50);
     directionalLight.position.set(0, 1200 * Math.tan(-15 * THREE.Math.DEG2RAD), 1200);
     lightsGroup.add(directionalLight);
 
@@ -77,10 +78,13 @@ export default class Intro {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
 
-    this.camera = new THREE.PerspectiveCamera(45, this.cameraAspect, 0.1, 1200);
-    this.camera.position.z = 1200;
+    this.camera = new THREE.PerspectiveCamera(45, this.cameraAspect, 0.1, 3000);
+    this.camera.position.z = 1405;
 
     this.scene = new THREE.Scene();
+
+    this.controls = new OrbitControls(this.camera, document.getElementById(`top`));
+    this.controls.zoomSpeed = 0.1;
 
     const loadManager = new THREE.LoadingManager();
     const textureLoader = new THREE.TextureLoader(loadManager);
@@ -139,10 +143,10 @@ export default class Intro {
 
     loadModel(model, this.setMaterial({color: model.color, ...model.reflectivity}), (mesh) => {
       mesh.name = model.name;
-      const scale = 1;
-      mesh.position.set(0, 0, 0);
+      const scale = 1.2;
+      mesh.position.set(250, 130, 150);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(60 * THREE.Math.DEG2RAD, 140 * THREE.Math.DEG2RAD, -15 * THREE.Math.DEG2RAD), `XYZ`);
       this.scene.add(mesh);
     });
   }
@@ -152,10 +156,10 @@ export default class Intro {
 
     loadModel(model, null, (mesh) => {
       mesh.name = model.name;
-      const scale = 1;
-      mesh.position.set(0, 0, 0);
+      const scale = 0.5;
+      mesh.position.set(-50, -150, 300);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, -140 * THREE.Math.DEG2RAD, 20 * THREE.Math.DEG2RAD), `XYZ`);
       this.scene.add(mesh);
     });
   }
@@ -166,9 +170,9 @@ export default class Intro {
     loadModel(model, null, (mesh) => {
       mesh.name = model.name;
       const scale = 1;
-      mesh.position.set(0, 0, 10);
+      mesh.position.set(-300, -150, 800);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 130 * THREE.Math.DEG2RAD), `XYZ`);
       this.scene.add(mesh);
     });
   }
@@ -199,8 +203,8 @@ export default class Intro {
 
   async loadLeaf() {
     const leaf = await new SVGObject(`leaf`).getObject();
-    const scale = 1.5;
-    leaf.position.set(660, 350, 100);
+    const scale = 1.4;
+    leaf.position.set(660, 350, 150);
     leaf.scale.set(scale, -scale, scale);
     leaf.rotation.copy(
         new THREE.Euler(
@@ -247,6 +251,14 @@ export default class Intro {
 
   render() {
     this.renderer.render(this.scene, this.camera);
+
+    this.controls.update();
+
+    if (this.isAnim) {
+      requestAnimationFrame(this.render);
+    } else {
+      cancelAnimationFrame(this.render);
+    }
   }
 
   updateSize() {
