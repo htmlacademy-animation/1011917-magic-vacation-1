@@ -10,7 +10,7 @@ import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
 import bodyOnload from "./modules/bodyOnload";
 import rules from "./modules/rules";
-import Intro from './modules/three/intro-animation.js';
+import IntroAndStory from './modules/three/IntroStory.js';
 
 // init modules
 bodyOnload();
@@ -24,15 +24,8 @@ form();
 social();
 rules();
 
-const intro = new Intro();
-
-document.body.addEventListener(`screenChanged`, (e) => {
-  if (e.detail.screenName === `top`) {
-    intro.init();
-  } else {
-    intro.stopAnim();
-  }
-});
+export const introAndStory = new IntroAndStory();
+introAndStory.init();
 
 const fullPageScroll = new FullPageScroll();
 fullPageScroll.init();

@@ -3,6 +3,7 @@ import {GameTitleAccentTypography, TitleAccentTypography, DateAccentTypography, 
 import controlSmil from './smil';
 import {runTimer, resetTimer} from './timer.js';
 import {runCounters, resetCounters} from './prizes-counter.js';
+// import {introAndStory} from '../script.js';
 
 export default class FullPageScroll {
   constructor() {
@@ -51,6 +52,7 @@ export default class FullPageScroll {
   }
 
   changeVisibilityDisplay() {
+    // const isIntroScreenActive = this.activeScreen === 0;
     const isPrizesScreenActive = this.activeScreen === 2;
     const isRulesScreenActive = this.activeScreen === 3;
     const isGameScreenActive = this.activeScreen === 4;
