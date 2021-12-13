@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {loadModel} from './models/modelLoader.js';
 import {loadSVG} from './svgLoader.js';
 import {colors, reflectivity} from '../colorsAndReflection.js';
-import Saturn from './objects/Saturn.js';
+import Saturn from './objects/saturn.js';
 
 
 class SceneIntro extends THREE.Group {
