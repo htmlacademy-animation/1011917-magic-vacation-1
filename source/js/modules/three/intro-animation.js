@@ -146,7 +146,7 @@ export default class Intro {
       const scale = 1.2;
       mesh.position.set(250, 130, 150);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(60 * THREE.Math.DEG2RAD, 140 * THREE.Math.DEG2RAD, -15 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(60 * THREE.Math.DEG2RAD, 140 * THREE.Math.DEG2RAD, -15 * THREE.Math.DEG2RAD));
       this.scene.add(mesh);
     });
   }
@@ -159,7 +159,7 @@ export default class Intro {
       const scale = 0.5;
       mesh.position.set(-50, -150, 300);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, -140 * THREE.Math.DEG2RAD, 20 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, -140 * THREE.Math.DEG2RAD, 20 * THREE.Math.DEG2RAD));
       this.scene.add(mesh);
     });
   }
@@ -172,7 +172,7 @@ export default class Intro {
       const scale = 1;
       mesh.position.set(-300, -150, 800);
       mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 130 * THREE.Math.DEG2RAD), `XYZ`);
+      mesh.rotation.copy(new THREE.Euler(20 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 130 * THREE.Math.DEG2RAD));
       this.scene.add(mesh);
     });
   }
@@ -195,8 +195,7 @@ export default class Intro {
             10 * THREE.Math.DEG2RAD,
             30 * THREE.Math.DEG2RAD,
             10 * THREE.Math.DEG2RAD
-        ),
-        `XYZ`
+        )
     );
     this.scene.add(flamingo);
   }
@@ -211,8 +210,7 @@ export default class Intro {
             10 * THREE.Math.DEG2RAD,
             10 * THREE.Math.DEG2RAD,
             -60 * THREE.Math.DEG2RAD
-        ),
-        `XYZ`
+        )
     );
     this.scene.add(leaf);
   }
@@ -227,8 +225,7 @@ export default class Intro {
             -30 * THREE.Math.DEG2RAD,
             0 * THREE.Math.DEG2RAD,
             20 * THREE.Math.DEG2RAD
-        ),
-        `XYZ`
+        )
     );
     this.scene.add(question);
   }
@@ -243,8 +240,7 @@ export default class Intro {
             -10 * THREE.Math.DEG2RAD,
             30 * THREE.Math.DEG2RAD,
             10 * THREE.Math.DEG2RAD
-        ),
-        `XYZ`
+        )
     );
     this.scene.add(snowflake);
   }
