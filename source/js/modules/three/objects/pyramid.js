@@ -3,10 +3,12 @@ import {setMaterial} from '../story.js';
 import {colors, reflectivity} from '../../colorsAndReflection.js';
 
 class Pyramid extends THREE.Group {
-  constructor() {
+  constructor(isShadow) {
     super();
 
     this.color = 0x0062c3;
+
+    this.isShadow = isShadow;
 
     this.cone = new THREE.ConeBufferGeometry(Math.hypot(250, 250) / 2, 280, 4);
     this.mesh = new THREE.Mesh(this.cone, setMaterial({color: colors.Blue, ...reflectivity.soft, flatShading: true}));
@@ -16,6 +18,14 @@ class Pyramid extends THREE.Group {
 
   constructChildren() {
     this.addPyramid();
+
+    if (this.isShadow) {
+      this.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true;
+        }
+      });
+    }
   }
 
   addPyramid() {

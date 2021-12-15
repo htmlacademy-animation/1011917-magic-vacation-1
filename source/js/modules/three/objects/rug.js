@@ -35,9 +35,9 @@ class Rug extends THREE.Group {
       baseColor: {value: new THREE.Color(this.colorBase)},
       stripeColor: {value: new THREE.Color(this.colorStripe)}
     }));
-    this.rugMesh = new THREE.Mesh(base, material);
-
-    this.add(this.rugMesh);
+    const rugMesh = new THREE.Mesh(base, material);
+    rugMesh.receiveShadow = true;
+    this.add(rugMesh);
   }
 }
 

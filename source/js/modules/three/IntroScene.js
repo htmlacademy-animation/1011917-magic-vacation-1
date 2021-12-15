@@ -3,12 +3,13 @@ import {loadModel} from './models/modelLoader.js';
 import {loadSVG} from './svgLoader.js';
 import {colors, reflectivity} from '../colorsAndReflection.js';
 import Saturn from './objects/saturn.js';
-
+import {isMobile} from './IntroStory.js';
 
 class SceneIntro extends THREE.Group {
   constructor() {
     super();
 
+    this.isShadow = !isMobile;
     this.constructChildren();
   }
 
@@ -43,7 +44,7 @@ class SceneIntro extends THREE.Group {
   }
 
   addAirplane() {
-    loadModel(`airplane`, this.setMaterial({color: colors.White, ...reflectivity.soft}), (mesh) => {
+    loadModel(`airplane`, this.isShadow, this.setMaterial({color: colors.White, ...reflectivity.soft}), (mesh) => {
       const scale = 1.2;
       mesh.position.set(250, 130, 150);
       mesh.scale.set(scale, scale, scale);
@@ -53,7 +54,7 @@ class SceneIntro extends THREE.Group {
   }
 
   addSuitcase() {
-    loadModel(`suitcase`, null, (mesh) => {
+    loadModel(`suitcase`, this.isShadow, null, (mesh) => {
       const scale = 0.5;
       mesh.position.set(-50, -150, 300);
       mesh.scale.set(scale, scale, scale);
@@ -63,7 +64,7 @@ class SceneIntro extends THREE.Group {
   }
 
   addWatermelon() {
-    loadModel(`watermelon`, null, (mesh) => {
+    loadModel(`watermelon`, this.isShadow, null, (mesh) => {
       const scale = 1;
       mesh.position.set(-300, -150, 800);
       mesh.scale.set(scale, scale, scale);
@@ -73,7 +74,7 @@ class SceneIntro extends THREE.Group {
   }
 
   loadKeyhole() {
-    loadSVG(`keyhole`, (svgGroup) => {
+    loadSVG(`keyhole`, this.isShadow, (svgGroup) => {
       const scale = 1.5;
       svgGroup.position.set(-1000 * scale, 1010 * scale, 10);
       svgGroup.scale.set(scale, -scale, scale);
@@ -82,7 +83,7 @@ class SceneIntro extends THREE.Group {
   }
 
   loadFlamingo() {
-    loadSVG(`flamingo`, (svgGroup) => {
+    loadSVG(`flamingo`, this.isShadow, (svgGroup) => {
       const scale = 2;
       svgGroup.position.set(-480, 370, 100);
       svgGroup.scale.set(-scale, -scale, scale);
@@ -92,7 +93,7 @@ class SceneIntro extends THREE.Group {
   }
 
   loadLeaf() {
-    loadSVG(`leaf`, (svgGroup) => {
+    loadSVG(`leaf`, this.isShadow, (svgGroup) => {
       const scale = 1.4;
       svgGroup.position.set(660, 350, 150);
       svgGroup.scale.set(scale, -scale, scale);
@@ -102,7 +103,7 @@ class SceneIntro extends THREE.Group {
   }
 
   loadQuestion() {
-    loadSVG(`question`, (svgGroup) => {
+    loadSVG(`question`, this.isShadow, (svgGroup) => {
       const scale = 1.6;
       svgGroup.position.set(100, -330, 100);
       svgGroup.scale.set(scale, -scale, scale);
@@ -112,7 +113,7 @@ class SceneIntro extends THREE.Group {
   }
 
   loadSnowflake() {
-    loadSVG(`snowflake`, (svgGroup) => {
+    loadSVG(`snowflake`, this.isShadow, (svgGroup) => {
       const scale = 1.4;
       svgGroup.position.set(-450, -10, 100);
       svgGroup.scale.set(scale, scale, scale);
@@ -122,7 +123,7 @@ class SceneIntro extends THREE.Group {
   }
 
   addSaturn() {
-    const saturn = new Saturn();
+    const saturn = new Saturn(false, this.isShadow);
     const scale = 0.6;
     saturn.scale.set(scale, scale, scale);
     saturn.position.set(400, -100, 500);
