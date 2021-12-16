@@ -4,6 +4,9 @@ import {OrbitControls} from '../../../../node_modules/three/examples/jsm/control
 
 import SceneIntro from './IntroScene.js';
 import StorySceneConstructor from './storyScenes/StorySceneConstructor.js';
+import {loadModel} from './models/modelLoader.js';
+
+export const isMobile = /android|ipad|iphone|ipod/i.test(navigator.userAgent) && !window.MSStream;
 
 let isOrbitControl = true;
 
@@ -23,6 +26,9 @@ class IntroAndStory {
 
     this.introGroupObj;
     this.StorySceneConstructor;
+
+    this.isShadow = !isMobile;
+    this.suitcase;
 
     this.render = this.render.bind(this);
     this.updateSize = this.updateSize.bind(this);
@@ -44,11 +50,13 @@ class IntroAndStory {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
 
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(this.cameraFov, this.cameraAspect, 0.1, 5000);
 
     this.addScene();
-
-    this.camera = new THREE.PerspectiveCamera(this.cameraFov, this.cameraAspect, 0.1, 5000);
 
     if (isOrbitControl) {
       this.controls = new OrbitControls(this.camera, document.getElementById(`top`));
@@ -70,6 +78,27 @@ class IntroAndStory {
   addScene() {
     this.addSceneIntro();
     this.addSceneAllStory();
+    this.addSuitcase();
+  }
+
+  setSuitcase() {
+    const suitcaseGroup = new THREE.Group();
+
+    loadModel(`suitcase`, this.isShadow, null, (mesh) => {
+      const scale = 0.9;
+      mesh.position.set(-350, -600, -1130);
+      mesh.scale.set(scale, scale, scale);
+      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, -23 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD));
+      suitcaseGroup.add(mesh);
+    });
+
+    return suitcaseGroup;
+  }
+
+  addSuitcase() {
+    const suitcase = this.setSuitcase();
+    this.suitcase = suitcase;
+    this.scene.add(this.suitcase);
   }
 
   addSceneIntro() {
@@ -94,18 +123,26 @@ class IntroAndStory {
   setLights() {
     const lightsGroup = new THREE.Group();
 
-    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.6);
-    directionalLight.position.set(0, 1000, 3000);
-    directionalLight.rotation.copy(new THREE.Euler(15 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, `YXZ`));
+    let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 1.3);
+    directionalLight.position.set(200, 0, 0);
+    directionalLight.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD, `YXZ`));
     this.directionalLight = directionalLight;
     lightsGroup.add(directionalLight);
 
-    let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.80, 4000, 0.5);
-    pointLight1.position.set(-785, -350, 0);
+    let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.1);
+    pointLight1.position.set(-500, -100, -100);
+    pointLight1.castShadow = true;
+    pointLight1.shadow.camera.far = 3000;
+    pointLight1.shadow.mapSize.width = 1000;
+    pointLight1.shadow.mapSize.height = 1000;
     lightsGroup.add(pointLight1);
 
-    let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.30, 4000, 0.5);
-    pointLight2.position.set(730, 500, 0);
+    let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.1);
+    pointLight2.position.set(800, 650, -500);
+    pointLight2.castShadow = true;
+    pointLight2.shadow.camera.far = 3000;
+    pointLight2.shadow.mapSize.width = 1000;
+    pointLight2.shadow.mapSize.height = 1000;
     lightsGroup.add(pointLight2);
 
     return lightsGroup;
@@ -119,7 +156,8 @@ class IntroAndStory {
     switch (sceneID) {
       case `intro`:
         this.setCameraIntro();
-        this.setPositionLightCamera();
+        this.setPositionObjStorySceneRelativeCamera(this.lights, 0);
+        this.suitcase.position.set(0, 0, this.camera.position.z + 1000);
         break;
       case `scene0`:
         angle = 90;
@@ -144,6 +182,7 @@ class IntroAndStory {
   setCameraIntro() {
     this.camera.position.set(0, 0, this.introGroupObj.position.z + 1405);
     this.controls.target.set(this.introGroupObj.position.x, this.introGroupObj.position.y, this.introGroupObj.position.z);
+    this.directionalLight.target = this.introGroupObj;
   }
 
   setCameraStory(angle) {
@@ -151,13 +190,30 @@ class IntroAndStory {
     const posZ = 1900 * Math.sin(angle * THREE.Math.DEG2RAD);
     this.camera.position.set(this.SceneAllStory.position.x + posX, 600, this.SceneAllStory.position.z + posZ);
     this.controls.target.set(this.SceneAllStory.position.x, this.SceneAllStory.position.y, this.SceneAllStory.position.z);
-
-    this.setPositionLightCamera();
+    this.setPositionObjStorySceneRelativeCamera(this.lights, angle);
+    this.directionalLight.target = this.SceneAllStory;
+    this.setPositionObjStorySceneRelativeCamera(this.suitcase, angle);
   }
 
-  setPositionLightCamera() {
-    this.lights.position.x = this.camera.position.x;
-    this.lights.position.z = this.camera.position.z;
+  setPositionObjStorySceneRelativeCamera(obj, angle) {
+    let angleObj = 0;
+
+    switch (angle) {
+      case 90:
+        angleObj = 0;
+        break;
+      case 0:
+        angleObj = 90;
+        break;
+      case -90:
+        angleObj = 180;
+        break;
+      case 180:
+        angleObj = -90;
+        break;
+    }
+    obj.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, angleObj * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD));
+    obj.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
   }
 
   render() {

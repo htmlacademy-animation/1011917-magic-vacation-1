@@ -7,7 +7,7 @@ import {colors, reflectivity} from '../../colorsAndReflection.js';
 import Floor from '../objects/floor.js';
 import Pyramid from '../objects/pyramid.js';
 import Lantern from '../objects/lantern.js';
-
+import {isMobile} from '../IntroStory.js';
 
 class Scene1Story extends THREE.Group {
   constructor() {
@@ -15,6 +15,8 @@ class Scene1Story extends THREE.Group {
 
     this.wall;
     this.floor;
+
+    this.isShadow = !isMobile;
 
     this.constructChildren();
   }
@@ -27,7 +29,7 @@ class Scene1Story extends THREE.Group {
     this.loadLeaf2();
     this.addPyramid();
     this.addLantern();
-    this.addSuitcase();
+    // this.addSuitcase();
   }
 
   setMaterial(options = {}) {
@@ -41,7 +43,7 @@ class Scene1Story extends THREE.Group {
   }
 
   addWallCornerUnit() {
-    loadModel(`wallCornerUnit`, this.setMaterial({color: colors.Blue, side: THREE.DoubleSide, ...reflectivity.basic}), (mesh) => {
+    loadModel(`wallCornerUnit`, this.isShadow, this.setMaterial({color: colors.Blue, side: THREE.DoubleSide, ...reflectivity.basic}), (mesh) => {
       const scale = 1;
       mesh.position.set(0, 0, 0);
       mesh.scale.set(scale, scale, scale);
@@ -61,7 +63,7 @@ class Scene1Story extends THREE.Group {
   }
 
   addSceneStatic() {
-    loadModel(`scene1static`, null, (mesh) => {
+    loadModel(`scene1static`, this.isShadow, null, (mesh) => {
       const scale = 1;
       mesh.position.set(0, 0, 0);
       mesh.scale.set(scale, scale, scale);
@@ -71,7 +73,7 @@ class Scene1Story extends THREE.Group {
   }
 
   loadLeaf1() {
-    loadSVG(`leaf1-storyScene1`, (svgGroup) => {
+    loadSVG(`leaf1-storyScene1`, this.isShadow, (svgGroup) => {
       const scale = 2.8;
       svgGroup.position.set(80, 350, 410);
       svgGroup.scale.set(scale, -scale, scale);
@@ -81,7 +83,7 @@ class Scene1Story extends THREE.Group {
   }
 
   loadLeaf2() {
-    loadSVG(`leaf1-storyScene1`, (svgGroup) => {
+    loadSVG(`leaf1-storyScene1`, this.isShadow, (svgGroup) => {
       const scale = 1.9;
       svgGroup.position.set(80, 120, 520);
       svgGroup.scale.set(scale, -scale, scale);
@@ -91,7 +93,7 @@ class Scene1Story extends THREE.Group {
   }
 
   addPyramid() {
-    const pyramid = new Pyramid();
+    const pyramid = new Pyramid(this.isShadow);
     const scale = 1;
     pyramid.scale.set(scale, scale, scale);
     pyramid.rotation.copy(new THREE.Euler(0, 45 * THREE.Math.DEG2RAD, 0, `XYZ`));
@@ -101,7 +103,7 @@ class Scene1Story extends THREE.Group {
   }
 
   addLantern() {
-    const lantern = new Lantern();
+    const lantern = new Lantern(this.isShadow);
     const scale = 1;
     lantern.scale.set(scale, scale, scale);
     lantern.rotation.copy(new THREE.Euler(0, -25 * THREE.Math.DEG2RAD, 0, `XYZ`));
@@ -111,7 +113,7 @@ class Scene1Story extends THREE.Group {
   }
 
   addSuitcase() {
-    loadModel(`suitcase`, null, (mesh) => {
+    loadModel(`suitcase`, this.isShadow, null, (mesh) => {
       const scale = 1;
       mesh.position.set(300, 0, 780);
       mesh.scale.set(scale, scale, scale);
