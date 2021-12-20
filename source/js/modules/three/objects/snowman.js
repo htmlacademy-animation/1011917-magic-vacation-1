@@ -1,6 +1,8 @@
+/* eslint-disable no-shadow */
 import * as THREE from 'three';
 import {setMaterial} from '../story.js';
 import {colors, reflectivity} from '../../colorsAndReflection.js';
+import {isShadow} from '../../helpers/isShadow.js';
 
 class Snowman extends THREE.Group {
   constructor(isShadow) {
@@ -28,13 +30,7 @@ class Snowman extends THREE.Group {
     this.addSphereSmall();
     this.addCone();
 
-    if (this.isShadow) {
-      this.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-    }
+    isShadow(this);
   }
 
   addSphereBig() {

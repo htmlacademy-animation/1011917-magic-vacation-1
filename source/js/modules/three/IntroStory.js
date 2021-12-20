@@ -21,6 +21,8 @@ class IntroAndStory {
     this.cameraAspect = this.width / this.height;
     this.cameraFov = 45;
 
+    this.startTime = -1;
+
     this.lights;
     this.directionalLight;
 
@@ -34,6 +36,7 @@ class IntroAndStory {
     this.updateSize = this.updateSize.bind(this);
 
     this.isAnim = false;
+    this.introSceneIaAnim = false;
 
   }
 
@@ -114,7 +117,7 @@ class IntroAndStory {
     const sceneAllStory = new StorySceneConstructor();
     const scale = 1;
     sceneAllStory.scale.set(scale, scale, scale);
-    sceneAllStory.position.set(0, 0, -3000);
+    sceneAllStory.position.set(0, -500, -2500);
     sceneAllStory.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, -45 * THREE.Math.DEG2RAD, 0));
     this.SceneAllStory = sceneAllStory;
     this.scene.add(sceneAllStory);
@@ -188,11 +191,20 @@ class IntroAndStory {
   setCameraStory(angle) {
     const posX = 1900 * Math.cos(angle * THREE.Math.DEG2RAD);
     const posZ = 1900 * Math.sin(angle * THREE.Math.DEG2RAD);
-    this.camera.position.set(this.SceneAllStory.position.x + posX, 600, this.SceneAllStory.position.z + posZ);
+    this.camera.position.set(this.SceneAllStory.position.x + posX, this.SceneAllStory.position.y + 600, this.SceneAllStory.position.z + posZ);
     this.controls.target.set(this.SceneAllStory.position.x, this.SceneAllStory.position.y, this.SceneAllStory.position.z);
     this.setPositionObjStorySceneRelativeCamera(this.lights, angle);
     this.directionalLight.target = this.SceneAllStory;
     this.setPositionObjStorySceneRelativeCamera(this.suitcase, angle);
+  }
+
+  animIntroScene() {
+    if (this.introGroupObj.children.length !== 10) {
+      return;
+    } else if (this.introSceneIaAnim !== true) {
+      this.introSceneIaAnim = true;
+      this.introGroupObj.startAnimimations();
+    }
   }
 
   setPositionObjStorySceneRelativeCamera(obj, angle) {
@@ -219,6 +231,8 @@ class IntroAndStory {
   render() {
     this.renderer.render(this.scene, this.camera);
 
+    this.animIntroScene();
+
     if (isOrbitControl) {
       this.controls.update();
     }
@@ -228,10 +242,6 @@ class IntroAndStory {
     } else {
       cancelAnimationFrame(this.render);
     }
-  }
-
-  stopAnim() {
-    this.isAnim = false;
   }
 
   updateSize() {
