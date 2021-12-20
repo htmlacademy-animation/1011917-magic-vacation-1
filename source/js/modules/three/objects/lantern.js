@@ -1,6 +1,8 @@
+/* eslint-disable no-shadow */
 import * as THREE from 'three';
 import {setMaterial} from '../story.js';
 import {colors, reflectivity} from '../../colorsAndReflection.js';
+import {isShadow} from '../../helpers/isShadow.js';
 
 class Lantern extends THREE.Group {
   constructor(isShadow) {
@@ -41,13 +43,7 @@ class Lantern extends THREE.Group {
     this.addTrapezoid();
     this.addTrapezoidTop();
 
-    if (this.isShadow) {
-      this.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-    }
+    isShadow(this);
   }
 
   addBaseCylinder() {

@@ -1,6 +1,9 @@
+/* eslint-disable no-shadow */
 import * as THREE from 'three';
 import {setMaterial} from '../story.js';
 import {colors, reflectivity} from '../../colorsAndReflection.js';
+import {isShadow} from '../../helpers/isShadow.js';
+
 
 class Pyramid extends THREE.Group {
   constructor(isShadow) {
@@ -19,13 +22,7 @@ class Pyramid extends THREE.Group {
   constructChildren() {
     this.addPyramid();
 
-    if (this.isShadow) {
-      this.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-    }
+    isShadow(this);
   }
 
   addPyramid() {

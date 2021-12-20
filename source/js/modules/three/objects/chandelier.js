@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import {setMaterial} from '../story.js';
 import {getLathePointsForCircle} from '../latheGeometry.js';
 import {colors, reflectivity} from '../../colorsAndReflection.js';
+import {isShadow} from '../../helpers/isShadow.js';
 
 class Chandelier extends THREE.Group {
+  // eslint-disable-next-line no-shadow
   constructor(isDark, isShadow) {
     super();
 
@@ -33,13 +35,7 @@ class Chandelier extends THREE.Group {
     this.addCylinder();
     this.addSphereSmall();
 
-    if (this.isShadow) {
-      this.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-    }
+    isShadow(this);
   }
 
   addSphereBig() {
