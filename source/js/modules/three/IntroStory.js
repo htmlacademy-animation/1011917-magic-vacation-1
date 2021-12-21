@@ -5,6 +5,7 @@ import {OrbitControls} from '../../../../node_modules/three/examples/jsm/control
 import SceneIntro from './IntroScene.js';
 import StorySceneConstructor from './storyScenes/StorySceneConstructor.js';
 import {loadModel} from './models/modelLoader.js';
+import {animateScale, animateMove} from '../helpers/animations.js';
 
 export const isMobile = /android|ipad|iphone|ipod/i.test(navigator.userAgent) && !window.MSStream;
 
@@ -21,22 +22,24 @@ class IntroAndStory {
     this.cameraAspect = this.width / this.height;
     this.cameraFov = 45;
 
-    this.startTime = -1;
-
     this.lights;
     this.directionalLight;
 
-    this.introGroupObj;
-    this.StorySceneConstructor;
+    this.startTime = -1;
 
     this.isShadow = !isMobile;
+
+    this.introGroupObj;
+    this.introSceneIaAnim = false;
+    this.SceneAllStory;
     this.suitcase;
+    this.suitcaseOnLoad = false;
+    this.suitcaseIsAnim = false;
 
     this.render = this.render.bind(this);
     this.updateSize = this.updateSize.bind(this);
 
     this.isAnim = false;
-    this.introSceneIaAnim = false;
 
   }
 
@@ -57,6 +60,7 @@ class IntroAndStory {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     this.scene = new THREE.Scene();
+
     this.camera = new THREE.PerspectiveCamera(this.cameraFov, this.cameraAspect, 0.1, 5000);
 
     this.addScene();
@@ -74,34 +78,13 @@ class IntroAndStory {
     this.scene.add(this.lights);
 
     this.isAnim = true;
-
     this.render();
   }
 
   addScene() {
+    this.addSuitcase();
     this.addSceneIntro();
     this.addSceneAllStory();
-    this.addSuitcase();
-  }
-
-  setSuitcase() {
-    const suitcaseGroup = new THREE.Group();
-
-    loadModel(`suitcase`, this.isShadow, null, (mesh) => {
-      const scale = 0.9;
-      mesh.position.set(-350, -600, -1130);
-      mesh.scale.set(scale, scale, scale);
-      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, -23 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD));
-      suitcaseGroup.add(mesh);
-    });
-
-    return suitcaseGroup;
-  }
-
-  addSuitcase() {
-    const suitcase = this.setSuitcase();
-    this.suitcase = suitcase;
-    this.scene.add(this.suitcase);
   }
 
   addSceneIntro() {
@@ -121,6 +104,50 @@ class IntroAndStory {
     sceneAllStory.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, -45 * THREE.Math.DEG2RAD, 0));
     this.SceneAllStory = sceneAllStory;
     this.scene.add(sceneAllStory);
+  }
+
+  setSuitcase() {
+    const suitcaseGroup = new THREE.Group();
+
+    loadModel(`suitcase`, this.isShadow, null, (mesh) => {
+      const scale = 0;
+      mesh.position.set(-350, -600, -1130);
+      mesh.scale.set(scale, scale, scale);
+      mesh.rotation.copy(new THREE.Euler(0 * THREE.Math.DEG2RAD, -23 * THREE.Math.DEG2RAD, 0 * THREE.Math.DEG2RAD));
+      mesh.name = `suitcase`;
+      this.suitcaseOnLoad = true;
+      suitcaseGroup.add(mesh);
+    });
+
+    return suitcaseGroup;
+  }
+
+  addSuitcase() {
+    const suitcase = this.setSuitcase();
+    this.suitcase = suitcase;
+    this.scene.add(this.suitcase);
+  }
+
+  startAanimationsSuitcase() {
+    if (this.suitcaseOnLoad !== true || this.suitcaseIsAnim !== true) {
+      return;
+    } else {
+      this.animationsSuitcase();
+      this.suitcaseIsAnim = false;
+    }
+  }
+
+  animationsSuitcase() {
+    const duration = 400;
+    const suitcase = this.suitcase.getObjectByName(`suitcase`);
+    animateMove(suitcase, [-350, -530, -1130], [-350, -600, -1130], duration, `easeInCubic`);
+    animateScale(suitcase, [0.9, 0.9, 0.9], [0.85, 0.95, 0.9], duration, `easeOutCubic`, () => {
+      animateScale(suitcase, [0.85, 0.95, 0.9], [0.9, 0.9, 1], duration / 2, `easeOutCubic`, () => {
+        animateScale(suitcase, [0.9, 0.9, 1], [0.9, 0.95, 0.85], duration / 3, `easeOutCubic`, () => {
+          animateScale(suitcase, [0.9, 0.95, 0.85], [0.9, 0.9, 0.9], duration / 3, `easeOutCubic`);
+        });
+      });
+    });
   }
 
   setLights() {
@@ -198,15 +225,6 @@ class IntroAndStory {
     this.setPositionObjStorySceneRelativeCamera(this.suitcase, angle);
   }
 
-  animIntroScene() {
-    if (this.introGroupObj.children.length !== 10) {
-      return;
-    } else if (this.introSceneIaAnim !== true) {
-      this.introSceneIaAnim = true;
-      this.introGroupObj.startAnimimations();
-    }
-  }
-
   setPositionObjStorySceneRelativeCamera(obj, angle) {
     let angleObj = 0;
 
@@ -228,10 +246,20 @@ class IntroAndStory {
     obj.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
   }
 
+  animIntroScene() {
+    if (this.introGroupObj.children.length !== 10) {
+      return;
+    } else if (this.introSceneIaAnim !== true) {
+      this.introSceneIaAnim = true;
+      this.introGroupObj.startAnimimations();
+    }
+  }
+
   render() {
     this.renderer.render(this.scene, this.camera);
 
     this.animIntroScene();
+    this.startAanimationsSuitcase();
 
     if (isOrbitControl) {
       this.controls.update();
@@ -256,7 +284,6 @@ class IntroAndStory {
     this.camera.aspect = this.cameraAspect;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.width, this.height);
-    // this.render();
   }
 }
 
