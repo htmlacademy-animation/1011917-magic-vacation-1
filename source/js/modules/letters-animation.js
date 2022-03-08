@@ -14,6 +14,7 @@ class AccentTypographyBuild {
     this.prePareText();
   }
 
+
   createElement(letter, index) {
     const span = document.createElement(`span`);
     span.textContent = letter;
@@ -29,6 +30,7 @@ class AccentTypographyBuild {
     }
     return span;
   }
+
 
   prePareText() {
     if (!this._element) {
@@ -52,12 +54,14 @@ class AccentTypographyBuild {
     this._element.appendChild(content);
   }
 
+
   runAnimation() {
     if (!this._element) {
       return;
     }
     this._element.classList.add(this._classForActivate);
   }
+
 
   destroyAnimation() {
     this._element.classList.remove(this._classForActivate);
