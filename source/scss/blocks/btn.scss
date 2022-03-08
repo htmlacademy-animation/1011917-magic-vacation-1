@@ -29,9 +29,7 @@
   }
 
   &::before {
-    position: absolute;
-    top: 0;
-    right: 0;
+    @include center;
     content: "";
     width: 100%;
     height: 100%;

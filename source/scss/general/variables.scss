@@ -3,7 +3,7 @@ $c-dark: #5f458c;
 $c-purple: #a67ee5;
 
 $font: "Proxima Nova", "Arial", sans-serif;
-$font-alt: "Radical", "Arial", sans-serif;
+$font-alt: "Radical",  "Arial", sans-serif;
 
 $stop-scaling: 2000px;
 
@@ -20,9 +20,6 @@ $retina-dppx: 1.5dppx;
 
 $index: 1.38871;
 
-$half-time-large-distance: cubic-bezier(0.26, 1.26, 1, 0.65);
+$duration-m1-t2: 1s;
 
-:root {
-  --state-main: #5f458c;
-  --state-second: #a67ee5;
-}
+$bez-m1-t2: cubic-bezier(.33,.76,.56,.94);

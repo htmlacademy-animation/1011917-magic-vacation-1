@@ -1,6 +1,7 @@
 import Swiper from "swiper";
 import {introAndStory} from '../script.js';
 
+
 export default () => {
   let storySlider;
 
@@ -18,7 +19,6 @@ export default () => {
           slideChange: () => {
             if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
               introAndStory.setStory(`scene0`);
-              introAndStory.suitcaseIsAnim = true;
             } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
               introAndStory.setStory(`scene1`);
             } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
@@ -26,7 +26,7 @@ export default () => {
             } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
               introAndStory.setStory(`scene3`);
             }
-          }
+          },
         },
         observer: true,
         observeParents: true
@@ -57,7 +57,7 @@ export default () => {
             } else if (storySlider.activeIndex === 6) {
               introAndStory.setStory(`scene3`);
             }
-          }
+          },
         },
         observer: true,
         observeParents: true
@@ -68,7 +68,8 @@ export default () => {
   document.body.addEventListener(`screenChanged`, (e) => {
     if (e.detail.screenName === `story`) {
       if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
-        introAndStory.setStory(`scene0`);
+        introAndStory.setStory(`fromIntroToScene0`);
+        introAndStory.suitcaseIaAnim = true;
       } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
         introAndStory.setStory(`scene1`);
       } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
@@ -76,6 +77,8 @@ export default () => {
       } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
         introAndStory.setStory(`scene3`);
       }
+    } else {
+      introAndStory.setStory(`intro`);
     }
   });
 

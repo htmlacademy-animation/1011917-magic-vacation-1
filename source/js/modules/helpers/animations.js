@@ -1,6 +1,9 @@
-/* eslint-disable no-unused-expressions */
+import * as THREE from 'three';
 import _ from './easing.js';
-import {activeScene} from '../three/story.js';
+// import {activeScene} from '../three/Story.js';
+import {isLandscape, activeScene} from '../three/IntroAndStory.js';
+
+export let isFinishFirsAnimObj = false;
 
 export class Animation {
   constructor(options) {
@@ -137,8 +140,10 @@ export const animateWithFPS = (render, duration, fps, endCB = () => { }) => {
       lastFrameUpdateTime = currentTime;
       render(progress);
     }
-    if (activeScene === 1) {
+    if (activeScene === `scene1`) {
       requestAnimationFrame(loop);
+    } else {
+      render(1);
     }
   }
 
@@ -157,11 +162,7 @@ export const animateScale = (item, start, finish, duration, ease, endCB = () => 
 
     const easing = _[`${ease}`](progress);
 
-    const scaleX = tick(start[0], finish[0], easing);
-    const scaleY = tick(start[1], finish[1], easing);
-    const scaleZ = tick(start[2], finish[2], easing);
-
-    const scale = [scaleX, scaleY, scaleZ];
+    const scale = setParamsXYZ(start, finish, easing);
 
     if (progress > 1) {
       endCB();
@@ -186,11 +187,7 @@ export const animateMove = (item, start, finish, duration, ease, endCB = () => {
 
     const easing = _[`${ease}`](progress);
 
-    const positionX = tick(start[0], finish[0], easing);
-    const positionY = tick(start[1], finish[1], easing);
-    const positionZ = tick(start[2], finish[2], easing);
-
-    const position = [positionX, positionY, positionZ];
+    const position = setParamsXYZ(start, finish, easing);
 
     if (progress > 1) {
       endCB();
@@ -205,13 +202,39 @@ export const animateMove = (item, start, finish, duration, ease, endCB = () => {
   loop();
 };
 
-export const animareFluctuationIntroObj = (items) => {
+export const animateMoveY = (item, start, finish, duration, ease, endCB = () => { }) => {
   let progress = 0;
   let startTime = Date.now();
 
   function loop() {
 
-    progress = (Date.now() - startTime) * 0.0001;
+    progress = (Date.now() - startTime) / duration;
+
+    const easing = _[`${ease}`](progress);
+
+    const positionY = tick(start, finish, easing);
+
+    if (progress > 1) {
+      endCB();
+      item.position.y = finish;
+      return;
+    }
+
+    item.position.y = positionY;
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+};
+
+export const animareFluctuationIntroObj = (items) => {
+  let progress = 0;
+  let startTime = new THREE.Clock();
+
+  function loop() {
+
+    progress = startTime.getElapsedTime() * 0.1;
 
     items.forEach((item) => {
       item.position.y = item.position.y + item.optAnim.amp * Math.sin((2 * Math.PI * progress) / item.optAnim.period);
@@ -233,27 +256,195 @@ export const animIntroObj = (items, duration, ease, endCB = () => { }) => {
 
     const easing = _[`${ease}`](progress);
 
+    let finishPosition;
+
     items.forEach((item) => {
-      const scaleX = tick(item.optAnim.startScale[0], item.optAnim.finishScale[0], easing);
-      const scaleY = tick(item.optAnim.startScale[1], item.optAnim.finishScale[1], easing);
-      const scaleZ = tick(item.optAnim.startScale[2], item.optAnim.finishScale[2], easing);
+      if (isLandscape) {
+        finishPosition = item.optAnim.finishPositionLS;
+      } else {
+        finishPosition = item.optAnim.finishPositionPO;
+      }
 
-      const positionX = tick(item.optAnim.startPosition[0], item.optAnim.finishPosition[0], easing);
-      const positionY = tick(item.optAnim.startPosition[1], item.optAnim.finishPosition[1], easing);
-      const positionZ = tick(item.optAnim.startPosition[2], item.optAnim.finishPosition[2], easing);
-
-      const scale = [scaleX, scaleY, scaleZ];
-      const position = [positionX, positionY, positionZ];
+      const scale = setParamsXYZ(item.optAnim.startScale, item.optAnim.finishScale, easing);
+      const position = setParamsXYZ(item.optAnim.startPosition, finishPosition, easing);
 
       item.scale.set(...scale);
       item.position.set(...position);
     });
 
     if (progress > 1) {
+      isFinishFirsAnimObj = true;
+
       animareFluctuationIntroObj(items);
       endCB();
       return;
     }
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+};
+
+export const setPositionIntroObj = (items) => {
+  let finishPosition;
+
+  items.forEach((item) => {
+    if (isLandscape) {
+      finishPosition = item.optAnim.finishPositionLS;
+    } else {
+      finishPosition = item.optAnim.finishPositionPO;
+    }
+
+    item.position.set(...finishPosition);
+  });
+};
+
+export const animDogTail = (t, item) => {
+
+  const progress = Math.floor(t % 6);
+
+  const amp = progress > 2 && progress < 6 ? 0.8 : 0.4;
+
+  item.rotation.x = amp * Math.sin((6 * Math.PI * t));
+};
+
+export const animSaturn = (t, amp, item1, item2) => {
+
+  const rotationX1 = amp * Math.sin((1 * Math.PI * t) / 2);
+  const rotationX2 = -0.2 * Math.sin((0.9 * Math.PI * t) / 2);
+
+  item1.rotation.x = rotationX1;
+  item2.rotation.x = rotationX2;
+};
+
+export const animLeaf = (t, item, amp, speed) => {
+
+  item.rotation.x = amp * Math.sin((Math.PI * _.easeOutElastic(t * speed)));
+};
+
+export const animConpass = (t, amp, item) => {
+  const rotationZ = amp * Math.sin((1.5 * Math.PI * t) / 2);
+
+  item.rotation.z = rotationZ;
+};
+
+export const animSonya = (t, item1, item2, item3) => {
+  const positionY = 10 * Math.sin((2 * Math.PI * t) / 2);
+
+  const rotationX1 = -0.05 * Math.sin((2 * Math.PI * t) / 2);
+
+  item1.position.y = positionY;
+  item2.rotation.y = -1.3 + rotationX1;
+  item3.rotation.y = 1.3 - rotationX1;
+};
+
+export const animSuitcaseIntro = (item, duration, ease, endCB = () => { }) => {
+  let progress = 0;
+  let startTime = Date.now();
+
+  const groupScale = item.getObjectByName(`scale`);
+  const groupRotation = item.getObjectByName(`rotation`);
+  const groupPositionXY = item.getObjectByName(`positionXY`);
+  const groupMove = item.getObjectByName(`move`);
+
+  function loop() {
+
+    progress = (Date.now() - startTime) / duration;
+
+    const easing = _[`${ease}`](progress);
+
+    const scale = setParamsXYZ(item.optAnim.startScale, item.optAnim.finishScale, easing);
+    const position = setParamsXYZ(item.optAnim.startPosition, item.optAnim.finishPosition, easing);
+    const rotation = setParamsXYZ(item.optAnim.startRotation, item.optAnim.finishRotation, easing);
+
+    const positionX = 30 * Math.sin(Math.PI * easing);
+    const positionY = 170 * Math.sin(Math.PI * easing);
+    const positionXY = [positionX, positionY, 0];
+
+    groupScale.scale.set(...scale);
+    groupMove.position.set(...position);
+    groupRotation.rotation.copy(new THREE.Euler(rotation[0] * THREE.Math.DEG2RAD, rotation[1] * THREE.Math.DEG2RAD, rotation[2] * THREE.Math.DEG2RAD));
+    groupPositionXY.position.set(...positionXY);
+
+    if (progress > 1) {
+      animareFluctuationIntroObj([item]);
+      endCB();
+      return;
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+};
+
+export const animAirplaneIntro = (item, duration, ease, endCB = () => { }) => {
+  let progress = 0;
+  let startTime = Date.now();
+
+  const groupScale = item.getObjectByName(`scale`);
+  const groupRotationAirplane = item.getObjectByName(`rotationAirplane`);
+  const groupPositionYZ = item.getObjectByName(`positionYZ`);
+  const groupRotationAxis = item.getObjectByName(`rotationAxis`);
+
+  function loop() {
+
+    progress = (Date.now() - startTime) / duration;
+
+    const easing = _[`${ease}`](progress);
+
+    const scale = setParamsXYZ(item.optAnim.startScale, item.optAnim.finishScale, easing);
+    const rotationAirplane = setParamsXYZ(item.optAnim.startRotationAirplane, item.optAnim.finishRotationAirplane, easing);
+    const positionYZ = setParamsXYZ(item.optAnim.startPositionYZ, item.optAnim.finishPositionYZ, easing);
+    const rotationAxis = tick(item.optAnim.startRotationAxis, item.optAnim.finishRotationAxis, easing);
+
+    groupScale.scale.set(...scale);
+    groupRotationAirplane.rotation.copy(new THREE.Euler(rotationAirplane[0] * THREE.Math.DEG2RAD, rotationAirplane[1] * THREE.Math.DEG2RAD, rotationAirplane[2] * THREE.Math.DEG2RAD, `YXZ`));
+    groupPositionYZ.position.set(...positionYZ);
+    groupRotationAxis.rotation.copy(new THREE.Euler(0, rotationAxis * THREE.Math.DEG2RAD, 0));
+
+    if (progress > 1) {
+      animareFluctuationIntroObj([item]);
+      endCB();
+      return;
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+};
+
+const setParamsXYZ = (start, finish, easing) => {
+  let paramsArr = [];
+
+  for (let i = 0; i <= 2; i++) {
+    const param = tick(start[i], finish[i], easing);
+    paramsArr.push(param);
+  }
+
+  return paramsArr;
+};
+
+export const animOpacity = (item, finish, duration) => {
+  let progress = 0;
+  let startTime = Date.now();
+  const start = item.material.opacity;
+
+  item.material.transparent = true;
+
+  function loop() {
+
+    progress = (Date.now() - startTime) / duration;
+
+    const opacity = start + progress * (finish - start);
+
+    if (progress > 1) {
+      return;
+    }
+
+    item.material.opacity = opacity;
 
     requestAnimationFrame(loop);
   }

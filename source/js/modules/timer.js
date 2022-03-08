@@ -1,60 +1,70 @@
-const counter = document.querySelector(`.game__counter`);
-const minEl = counter.querySelector(`.minutes`);
-const secEl = counter.querySelector(`.seconds`);
-const FPS = 1;
-const F_INTERVAL = 1000 / FPS;
-const DURATION = 5 * 60 * 1000;
+export default class Timer {
+  constructor(gameCounter, dur) {
+    this.minutes = gameCounter[0];
+    this.seconds = gameCounter[1];
+    this.duration = dur * 60 * 1000;
+    // this.timerActive;
+    this.fps = 10;
+    this.fpsInterval = 1000 / this.fps;
+    this.then = Date.now();
+    // this.elapsed;
+  }
 
-let reqId;
+  startTimer() {
+    this.startTime = Date.now();
+    this.tick();
+  }
 
-function getValue(value) {
-  return String(value).length === 1 ? `0${value}` : value;
-}
-
-function setTimer(setTime) {
-  const minuteVal = Math.floor(setTime / (60 * 1000));
-  const seccondVal = Math.floor((setTime % (60 * 1000)) / 1000);
-
-  minEl.innerText = getValue(minuteVal);
-  secEl.innerText = getValue(seccondVal);
-}
-
-function runTimer(callback) {
-  let start = Date.now();
-  let now;
-  let then = start;
-  let elapsed;
-
-  const tick = () => {
-    reqId = requestAnimationFrame(tick);
-    now = Date.now();
-    elapsed = now - then;
-
-    const remainTime = DURATION - (now - start);
-
-    if (remainTime < 0) {
-      cancelAnimationFrame(reqId);
-      if (callback) {
-        callback();
-      }
-    } else if (elapsed >= F_INTERVAL) {
-      then = now - (elapsed % F_INTERVAL);
-      setTimer(remainTime);
+  restartTicker() {
+    if (typeof this.tickerRequest === `undefined`) {
+      this.startTimer();
     }
-  };
+  }
 
-  reqId = requestAnimationFrame(tick);
-}
+  stopTimer() {
+    cancelAnimationFrame(this.tickerRequest);
+    this.tickerRequest = undefined;
+  }
 
-function resetTimer() {
-  if (reqId) {
-    cancelAnimationFrame(reqId);
-    setTimer(DURATION);
-    reqId = null;
+  resetTimer() {
+    this.stopTimer();
+    this.minutes.innerText = `00`;
+    this.seconds.innerText = `00`;
+  }
+
+  tick() {
+    this.tickerRequest = requestAnimationFrame(() => {
+      let nowTime = Date.now();
+      const time = this.duration - (nowTime - this.startTime);
+      let textMin = parseInt((time / (1000 * 60)) % 60, 10);
+      let textSec = parseInt((time / 1000) % 60, 10);
+
+      const now = Date.now();
+      this.elapsed = now - this.then;
+
+      if (this.elapsed > this.fpsInterval) {
+        this.then = now - (this.elapsed % this.fpsInterval);
+
+        this.setTime(textSec, textMin);
+
+        if ((textMin === 0 && textSec === 0) || textMin < 0 || textSec < 0) {
+          this.resetTimer();
+        }
+      }
+      this.tick();
+    });
+  }
+
+  setTime(textSec, textMin) {
+    if (textMin < 10) {
+      this.minutes.innerText = `0${textMin}`;
+    } else {
+      this.minutes.innerText = textMin;
+    }
+    if (textSec < 10) {
+      this.seconds.innerText = `0${textSec}`;
+    } else {
+      this.seconds.innerText = textSec;
+    }
   }
 }
-
-export {
-  runTimer,
-  resetTimer
-};

@@ -1,14 +1,13 @@
 import * as THREE from 'three';
-import bubbleRawShaderMaterial from './bubbleRawShaderMaterial';
-import {animationFPS} from './FPSAnimation';
-
-import StoryScene0 from './storyScenes/storyScene0.js';
-import StoryScene1 from './storyScenes/storyScene1.js';
-import StoryScene2 from './storyScenes/storyScene2.js';
-import StoryScene3 from './storyScenes/storyScene3.js';
+import bubbleRawShaderMaterial from './storyScene/materials/bubbleRawShaderMaterial';
+import {animateWithFPS} from '../helpers/animations.js';
+import Scene0Story from './storyScene/Scene0Story.js';
+import Scene1Story from './storyScene/Scene1Story.js';
+import Scene2Story from './storyScene/Scene2Story.js';
+import Scene3Story from './storyScene/Scene3Story.js';
 
 export let activeScene;
-let animHueKey = false;
+let animSceneKey = false;
 
 export const setMaterial = (options = {}) => {
   const {color, ...other} = options;
@@ -30,30 +29,28 @@ export class Story {
     this.textures = [
       {src: `./img/module-5/scenes-textures/scene-1.png`,
         options: {hue: 0.0},
-        scene: new StoryScene0()
+        scene: new Scene0Story()},
+      {src: `./img/module-5/scenes-textures/scene-2.png`, options: {
+        hue: 0.1,
+        isMagnifier: true,
+        animationSettings: {
+          hue: {
+            initalHue: 0.1,
+            finalHue: -0.5,
+            duration: 3000,
+            variation: 0.3,
+          },
+        }
       },
-      {
-        src: `./img/module-5/scenes-textures/scene-2.png`, options: {
-          hue: 0.1,
-          isMagnifier: true,
-          animationSettings: {
-            hue: {
-              initalHue: 0.1,
-              finalHue: -0.5,
-              duration: 2500,
-              variation: 0.2,
-            },
-          }
-        },
-        scene: new StoryScene1()
+      scene: new Scene1Story()
       },
       {src: `./img/module-5/scenes-textures/scene-3.png`,
         options: {hue: 0.0},
-        scene: new StoryScene2()
+        scene: new Scene2Story()
       },
       {src: `./img/module-5/scenes-textures/scene-4.png`,
         options: {hue: 0.0},
-        scene: new StoryScene3()
+        scene: new Scene3Story()
       },
     ];
     this.textureWidth = 2048;
@@ -65,14 +62,15 @@ export class Story {
     this.bubbleGlareOffset = 0.8;
     this.bubbleGlareStartRadianAngle = 2;
     this.bubbleGlareEndRadianAngle = 2.8;
+
     this.bubblesDuration = 3000;
 
     this.bubbles = [
       {
         radius: this.width * 0.1,
-        initialPosition: [this.canvasCenter.x - this.width * 0.6, this.canvasCenter.y - this.height * 1.8],
-        position: [this.canvasCenter.x - this.width * 0.6, this.canvasCenter.y - this.height * 1.8],
-        finalPosition: [this.canvasCenter.x - this.width * 0.6, this.canvasCenter.y + this.height * 1.8],
+        initialPosition: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y - this.height * 1.8],
+        position: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y - this.height * 1.8],
+        finalPosition: [this.canvasCenter.x - this.width * 0.5, this.canvasCenter.y + this.height * 1.8],
         amplitude: 80,
         glareOffset: this.bubbleGlareOffset,
         glareAngleStart: this.bubbleGlareStartRadianAngle,
@@ -122,19 +120,35 @@ export class Story {
     return {};
   }
 
+  // setSphere() {
+  //   const geometry = new THREE.SphereGeometry(100, 50, 50);
+
+  //   const material = new THREE.MeshStandardMaterial({
+  //     color: 0xff0000,
+  //     metalness: 0.05,
+  //     emissive: 0x0,
+  //     roughness: 0.5,
+  //   });
+
+  //   return new THREE.Mesh(geometry, material);
+  // }
+
   setLights() {
     const lightsGroup = new THREE.Group();
 
     let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(255,255,255)`), 0.10);
+    // let directionalLight = new THREE.DirectionalLight(new THREE.Color(`rgb(173, 255,47)`), 0.20);
     directionalLight.position.set(0, this.position.z * Math.tan(-15 * THREE.Math.DEG2RAD), this.position.z);
     lightsGroup.add(directionalLight);
 
     let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(246,242,255)`), 0.80, 3000, 0.5);
-    pointLight1.position.set(-785, -350, 710);
+    // let pointLight1 = new THREE.PointLight(new THREE.Color(`rgb(255, 20, 147)`), 0.40, 3000, 1);
+    pointLight1.position.set(-785, -350, 0);
     lightsGroup.add(pointLight1);
 
     let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(245,254,255)`), 0.30, 3000, 0.5);
-    pointLight2.position.set(730, 800, 985);
+    // let pointLight2 = new THREE.PointLight(new THREE.Color(`rgb(0, 255, 255)`), 0.40, 3000, 1);
+    pointLight2.position.set(730, 400, 0);
     lightsGroup.add(pointLight2);
 
     return lightsGroup;
@@ -178,8 +192,12 @@ export class Story {
         image.scale.y = this.textureHeight;
         image.position.x = this.textureWidth * index;
 
+        // const sphere = this.setSphere();
+        // this.scene.add(sphere);
+
         const lights = this.setLights();
         lights.position.z = this.camera.position.z;
+        // this.scene.add(lights);
 
         if (texture.scene) {
           texture.scene.position.x = this.textureWidth * index;
@@ -213,17 +231,14 @@ export class Story {
 
   animateHueShift() {
     const {initalHue, finalHue, duration, variation} = this.textures[1].options.animationSettings.hue;
-
     const offset = (Math.random() * variation * 2 + (1 - variation));
-
     let anim = () => {
-      animationFPS(this.hueShiftIntensityAnimationTick(initalHue, finalHue * offset), duration * offset, 30, () => {
+      animateWithFPS(this.hueShiftIntensityAnimationTick(initalHue, finalHue * offset), duration * offset, 30, () => {
         if (activeScene === 1) {
           anim();
         }
       });
     };
-
     anim();
   }
 
@@ -245,7 +260,7 @@ export class Story {
 
   animateBubbles(index) {
     let anim = () => {
-      animationFPS(
+      animateWithFPS(
           this.bubblePositionAnimationTick(this.bubbles[index], this.bubbles[index].initialPosition, this.bubbles[index].finalPosition),
           this.bubblesDuration,
           30,
@@ -286,12 +301,13 @@ export class Story {
 
   setScene(sceneID) {
     this.camera.position.x = this.textureWidth * sceneID;
+
     activeScene = sceneID;
     this.render();
 
     if (sceneID === 1) {
-      if (animHueKey !== true) {
-        animHueKey = true;
+      if (animSceneKey !== true) {
+        animSceneKey = true;
 
         this.resetHueShift();
         this.animateHueShift();
@@ -303,7 +319,7 @@ export class Story {
 
       }
     } else {
-      animHueKey = false;
+      animSceneKey = false;
     }
   }
 }

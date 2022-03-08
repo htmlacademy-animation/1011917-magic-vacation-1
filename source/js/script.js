@@ -1,4 +1,3 @@
-// modules
 import mobileHeight from './modules/mobile-height-adjust.js';
 import slider from './modules/slider.js';
 import menu from './modules/menu.js';
@@ -8,12 +7,10 @@ import result from './modules/result.js';
 import form from './modules/form.js';
 import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
-import bodyOnload from "./modules/bodyOnload";
-import rules from "./modules/rules";
-import IntroAndStory from './modules/three/IntroStory.js';
+import rules from './modules/rules.js';
+import {setStartScreenTextLine} from './modules/letters-animation.js';
+import IntroAndStory from './modules/three/IntroAndStory.js';
 
-// init modules
-bodyOnload();
 mobileHeight();
 slider();
 menu();
@@ -23,9 +20,14 @@ result();
 form();
 social();
 rules();
+setStartScreenTextLine();
 
 export const introAndStory = new IntroAndStory();
 introAndStory.init();
 
 const fullPageScroll = new FullPageScroll();
 fullPageScroll.init();
+
+// window.addEventListener(`load`, () => {
+//   document.body.classList.add(`page__load`);
+// });

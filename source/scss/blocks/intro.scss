@@ -33,19 +33,6 @@
   line-height: 0.906;
   letter-spacing: -0.04em;
 
-  .space {
-    padding: 0.5rem 0;
-    margin: 0 -0.04em;
-  }
-
-  .space > .letter {
-    transform: translate3d(0, 14rem, 0);
-  }
-
-  &.active .space > .letter {
-    transform: translate3d(0, 1rem, 0);
-  }
-
   @media (min-width: $stop-scaling) {
     max-width: 990px;
     font-size: 120px;
@@ -54,10 +41,6 @@
   @media (max-width: $tablet) and (orientation: portrait) {
     max-width: 100%;
     font-size: 3.6rem;
-
-    &.active .space > .letter {
-      transform: translate3d(0, 1rem, 0);
-    }
   }
 
   @media (max-width: $tablet) and (orientation: landscape) {
@@ -110,12 +93,6 @@
   text-transform: uppercase;
   font-size: 2.4rem;
   line-height: 1.27;
-  opacity: 0;
-  transform: translateY(2.5rem);
-
-  .active & {
-    animation: fadeInUp 1.5s forwards 1s;
-  }
 
   @media (min-width: $stop-scaling) {
     width: 509px;
@@ -138,6 +115,7 @@
 
   p {
     margin: 0;
+    opacity: 0;
   }
 
   svg {
@@ -158,6 +136,13 @@
   }
 }
 
+.intro__message__textAnim {
+  animation-fill-mode: forwards;
+  animation-name: fadeInTop;
+  animation-duration: 0.5s;
+  animation-delay: 0.5s;
+}
+
 .intro__label {
   margin: 0 0 1.6rem;
   max-width: 25rem;
@@ -165,11 +150,6 @@
   font-size: 2.4rem;
   line-height: 1.2;
   opacity: 0;
-  visibility: hidden;
-
-  .active & {
-    animation: opacity 1.35s forwards 1.35s;
-  }
 
   @media (min-width: $stop-scaling) {
     margin: 0 0 16px;
@@ -186,24 +166,30 @@
   line-height: 0.906;
   letter-spacing: -0.04em;
 
-  .space {
-    padding: 0.5rem 0.1em;
-
-    &:first-child {
-      padding-left: 0;
-    }
-  }
-
-  .space > .letter {
-    transform: translate3d(0, 5.5rem, 0);
-  }
-
-  &.active .space > .letter {
-    transform: translate3d(0, 0, 0);
-  }
-
   @media (min-width: $stop-scaling) {
     margin: 0 0 0 -5px;
     font-size: 48px;
   }
+}
+
+.text__word {
+  display: inline-block;
+  margin: 0 0 -0.5em 0;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.text__word > span {
+    transform: translate3d(0, 1.25em, 0);
+    display: inline-block;
+    will-change: transform;
+}
+
+.intro__title.active .text__word span {
+  transform: translate3d(0, 0, 0);
+}
+
+.intro__date.active .text__word span {
+  transform: translate3d(0, 0, 0);
 }
