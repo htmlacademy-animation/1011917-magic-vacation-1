@@ -1,45 +1,3 @@
-body {
-  &.load {
-    & .screen__footer {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  &.screen--toggling {
-    &::before {
-      height: 100%;
-      opacity: 1;
-    }
-  }
-}
-
-.load {
-  &::before {
-    content: "";
-    position: fixed;
-    z-index: 2;
-
-    height: 0;
-    width: 100%;
-
-    bottom: 0;
-    opacity: 0;
-
-    background-color: #5f458c;
-
-    transition: height 0.4s ease;
-  }
-}
-
-.screen--prizes {
-  &.will-destroy {
-    .screen__footer-note {
-      animation: opacity-out 0.3s linear;
-    }
-  }
-}
-
 .screen {
   position: relative;
   display: flex;
@@ -89,31 +47,13 @@ body {
   background-color: $c-light;
   z-index: 1;
   transform: translateY(100%);
-  opacity: 0;
-  transition-property: opacity, transform;
-  transition-timing-function: cubic-bezier(0.5, 0.8, 1, 1);
-  transition-duration: 0.5s;
-  transition-delay: 0.6s;
 
-  .body--loaded .active &,
-  .show-footer &,
-  .active-footer .show & {
+  transition-property: transform;
+  transition-duration: $duration-m1-t2;
+  transition-timing-function: $bez-m1-t2;
+
+  .page__load & {
     transform: translateY(0);
-    opacity: 1;
-  }
-
-  opacity: 0;
-  transform: translateY(100%);
-  transition: opacity 0.5s $half-time-large-distance, transform 0.5s $half-time-large-distance;
-
-  @media (max-width: $tablet) and (orientation: portrait),
-  (max-width: $mobile) and (orientation: landscape)  {
-    transition-property: width, height;
-    transition-duration: 0.3s;
-
-    &.screen__footer--full {
-      transition-duration: 0.45s;
-    }
   }
 
   @media (max-width: $tablet) and (orientation: portrait) {
@@ -141,32 +81,20 @@ body {
 
 .screen__footer-wrapper {
   @include container;
-  transition-property: opacity;
 
-  @media (max-width: $tablet) and (orientation: portrait),
-  (max-width: $mobile) and (orientation: landscape) {
+  @media (max-width: $tablet) and (orientation: portrait) {
     opacity: 0;
-    transition: opacity 20ms ease;
 
     .screen__footer--full & {
-      transition-duration: 0.3s;
-      transition-delay: 0.35s;
       opacity: 1;
     }
   }
 
-  @media (min-width: $tablet + 1px) and (orientation: landscape) {
-    .active-footer & {
-      opacity: 0;
-      transition-duration: 0.5s;
-    }
+  @media (max-width: $mobile) and (orientation: landscape) {
+    opacity: 0;
 
-    .active-footer .active & {
+    .screen__footer--full & {
       opacity: 1;
-    }
-
-    .show:not(.active) & {
-      opacity: 0;
     }
   }
 }
@@ -182,15 +110,20 @@ body {
   color: $c-dark;
   z-index: 1;
 
-  @media (max-width: $tablet) and (orientation: portrait),
-  (max-width: $mobile) and (orientation: landscape) {
+  @media (max-width: $tablet) and (orientation: portrait) {
     display: block;
-    transition: opacity 0.3s ease 0.15s;
 
     .screen__footer--full & {
       opacity: 0;
-      transition-duration: 0.1s;
-      transition-delay: 0s;
+      pointer-events: none;
+    }
+  }
+
+  @media (max-width: $mobile) and (orientation: landscape) {
+    display: block;
+
+    .screen__footer--full & {
+      opacity: 0;
       pointer-events: none;
     }
   }
@@ -216,16 +149,23 @@ body {
   color: $c-dark;
   z-index: 1;
 
-  @media (max-width: $tablet) and (orientation: portrait),
-  (max-width: $mobile) and (orientation: landscape) {
+  @media (max-width: $tablet) and (orientation: portrait) {
     display: block;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.1s ease;
 
     .screen__footer--full & {
-      transition-duration: 0.3s;
-      transition-delay: 0.35s;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  @media (max-width: $mobile) and (orientation: landscape) {
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+
+    .screen__footer--full & {
       opacity: 1;
       pointer-events: auto;
     }
@@ -357,13 +297,11 @@ body {
   }
 }
 
-.screen__canvas {
-  position: absolute;
-}
-
 .screen--prizes {
-  &.active {
-    z-index: 2;
+  background-color: $c-dark;
+
+  &.off{
+    background-color: none;
   }
 }
 
@@ -371,29 +309,28 @@ body {
   position: relative;
   background-color: $c-dark;
 
-  &::before {
-    content: "";
+  .screen__sonyaPicture {
     position: absolute;
     right: -8.5rem;
     bottom: 0;
-    width: 32.7rem;
-    height: 36.9rem;
-    background-image: url("../img/sonya.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-
-    @include retina {
-      background-image: url("../img/sonya@2x.png");
-    }
 
     @media (min-width: $stop-scaling) {
       right: -85px;
-      width: 327px;
-      height: 369px;
     }
 
     @media (max-width: $tablet) and (orientation: portrait) {
       opacity: 0;
+    }
+  }
+  .screen__sonyaImg {
+    display: block;
+    object-fit: contain;
+    width: 32.7rem;
+    height: 36.9rem;
+
+    @media (min-width: $stop-scaling) {
+      width: 327px;
+      height: 369px;
     }
   }
 }
@@ -417,16 +354,21 @@ body {
   background-color: $c-dark;
 }
 
-.story__title {
-  .space {
-    line-height: 1.4;
-  }
+.bg_prize {
+  position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    background-color: $c-dark;
+  
+    &.active {
+      transition: height 0.5s;
+      height: 100%;
+      z-index: 1;
+    }
+}
 
-  .space > .letter {
-    transform: translate3d(0, 14rem, 0);
-  }
-
-  &.active .space > .letter {
-    transform: translate3d(0, 1rem, 0);
-  }
+.screen__canvas {
+  position: absolute;
 }

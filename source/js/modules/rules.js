@@ -1,12 +1,8 @@
 export default () => {
-  const rulesItems = document.querySelectorAll(`.rules__item`);
+  let rulesItem = document.querySelector(`.rules__list li:last-child`);
+  let btnOn = document.querySelector(`.rules__link`);
 
-  if (rulesItems.length) {
-    const lastRulesItem = rulesItems[rulesItems.length - 1];
-
-    lastRulesItem.addEventListener(`animationend`, () => {
-      const rulesLink = document.querySelector(`.rules__link`);
-      rulesLink.classList.add(`active`);
-    });
-  }
+  rulesItem.addEventListener(`animationend`, () => {
+    btnOn.classList.add(`active`);
+  });
 };

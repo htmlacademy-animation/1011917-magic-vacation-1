@@ -47,16 +47,8 @@
   font-family: $font-alt;
   font-weight: 400;
   font-size: 4.8rem;
-  line-height: 1.3;
+  line-height: 0.906;
   letter-spacing: -0.04em;
-
-  .space > .letter {
-    transform: translate3d(0, 14rem, 0);
-  }
-
-  &.active .space > .letter {
-    transform: translate3d(0, 1rem, 0);
-  }
 
   @media (min-width: $stop-scaling) {
     font-size: 48px;
@@ -122,7 +114,7 @@
   left: 0;
   z-index: 100;
   opacity: 0.5;
-  display: none;
+  // display: none;
 }
 
 .game__button {

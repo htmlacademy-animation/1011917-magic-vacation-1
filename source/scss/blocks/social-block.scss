@@ -2,37 +2,11 @@
   position: relative;
 
   &:hover {
-    & .social-block__link {
-      transform: translateY(0);
+    .social-block__list {
       opacity: 1;
-
-      &--fb {
-        transition-delay: 0.1s;
-      }
-
-      &--insta {
-        transition-delay: 0.2s;
-      }
-
-      &--vk {
-        transition-delay: 0.3s;
-      }
+      pointer-events: auto;
     }
   }
-}
-
-body {
-  &.load {
-    & .page-header__nav {
-      opacity: 1;
-    }
-  }
-}
-
-.page-header__nav {
-  opacity: 0;
-  transition: opacity 0.5s $half-time-large-distance;
-  transition-delay: 0.2s;
 }
 
 .social-block__toggler {
@@ -41,7 +15,7 @@ body {
   display: block;
   width: 4rem;
   height: 4rem;
-  color: var(--state-main);
+  color: $c-dark;
   border-radius: 50%;
 
   @media (max-width: $tablet) and (orientation: portrait) {
@@ -52,7 +26,8 @@ body {
     display: none;
   }
 
-  &::before {
+  &::before ,
+  &::after {
     @include center;
     content: "";
     width: 100%;
@@ -61,8 +36,10 @@ body {
     background-color: $c-light;
     border: 2px solid $c-light;
     z-index: -1;
+  }
 
-    transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  &::before {
+    opacity: 0;
   }
 
   svg {
@@ -74,30 +51,27 @@ body {
 
   &:hover,
   .social-block--active & {
-    color: var(--state-second);
+    color: $c-purple;
 
     &::before {
+      transition: 0.5s;
+      transition-delay: 0.2s;
       width: 112.5%;
       height: 112.5%;
     }
   }
 
   &:focus {
-    color: var(--state-second);
+    color: $c-light;
     outline: none;
 
     &::before {
-      border-color: var(--state-second);
+      opacity: 0;
     }
 
-    & + .social-block__list {
-      opacity: 1;
-      pointer-events: auto;
-
-      li {
-        opacity: 1;
-        pointer-events: auto;
-      }
+    &::after {
+      background-color: $c-purple;
+      border: none;
     }
   }
 
@@ -108,8 +82,8 @@ body {
     &::before {
       width: 100%;
       height: 100%;
-      background-color: var(--state-second);
-      border-color: var(--state-second);
+      background-color: $c-purple;
+      border-color: $c-purple;
     }
   }
 }
@@ -120,7 +94,30 @@ body {
   top: 100%;
   right: 0;
   margin-top: 1.5rem;
+  opacity: 1;
   pointer-events: none;
+
+  .social-block--active &,
+  .social-block__toggler:focus + &,
+  .social-block__toggler:hover + & {
+    opacity: 1;
+    pointer-events: auto;
+
+    .social-block__link--fb,
+    .social-block__link--insta,
+    .social-block__link--vk {
+      opacity: 1;
+      transform: translate(0);
+      transition: 0.5s;
+      transition-property: transform opacity;
+    }
+    .social-block__link--insta {
+      transition-delay: 0.1s;
+    }
+    .social-block__link--vk {
+      transition-delay: 0.2s;
+    }
+  }
 
   @media (min-width: $stop-scaling) {
     margin-top: 15px;
@@ -200,10 +197,8 @@ body {
   color: $c-light;
   border: 2px solid transparent;
   border-radius: 50%;
-  opacity: 0;
-  transform: translateY(5px);
-
-  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  transition-duration: 0.5s;
+  transition-property: color;
 
   @media (min-width: $stop-scaling) {
     width: 40px;
@@ -212,28 +207,29 @@ body {
 
   @media (max-width: $tablet) and (orientation: portrait) {
     color: $c-light;
-    background-color: var(--state-main);
+    background-color: $c-dark;
   }
 
   @media (max-width: $mobile) and (orientation: landscape) {
     color: $c-light;
-    background-color: var(--state-main);
+    background-color: $c-dark;
   }
 
   &:hover {
-    color: var(--state-second);
+    transition: 0.5s;
+    color: $c-purple;
   }
 
   &:focus {
-    color: var(--state-second);
+    color: $c-purple;
     background-color: $c-light;
-    border-color: var(--state-second);
+    border-color: $c-purple;
     outline: none;
   }
 
   &:active,
   &:active:focus {
-    color: var(--state-second);
+    color: $c-purple;
     background-color: $c-light;
     border-color: $c-light;
   }
@@ -243,6 +239,8 @@ body {
   }
 
   &--fb {
+    opacity: 0;
+    transform: translate(0, 20%);
     svg {
       width: 0.8rem;
       height: 1.7rem;
@@ -255,6 +253,8 @@ body {
   }
 
   &--insta {
+    opacity: 0;
+    transform: translate(0, 20%);
     svg {
       width: 1.5rem;
       height: 1.5rem;
@@ -267,6 +267,8 @@ body {
   }
 
   &--vk {
+    opacity: 0;
+    transform: translate(0, 20%);
     svg {
       width: 1.7rem;
       height: 1rem;

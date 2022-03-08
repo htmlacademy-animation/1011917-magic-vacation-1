@@ -1,5 +1,5 @@
-import seacalfScene from "./seacalfCanvas.js";
-import ResultFail from "./crocodile-animation.js";
+import ResultWin from './canvas/result1_canvas_animation';
+import ResultFail from './canvas/result3_canvas_animation';
 
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
@@ -20,17 +20,20 @@ export default () => {
 
         switch (target) {
           case `result`:
-            // eslint-disable-next-line new-cap
-            let seacalfCanvasAnimate = new seacalfScene({
-              canvas: document.querySelector(`#seacalf-canvas`),
+            document.querySelector(`#titleResultOpacity`).beginElement();
+            const animationResult1 = new ResultWin({
+              canvas: `#result_canvas`
             });
-
-            seacalfCanvasAnimate.startAnimation();
+            animationResult1.startAnimation();
 
             break;
+          case `result2`:
+            document.querySelector(`#titleResult2Opacity`).beginElement();
+            break;
           case `result3`:
+            document.querySelector(`#titleResult3Opacity`).beginElement();
             const animationResult3 = new ResultFail({
-              canvas: `#result3_canvas`,
+              canvas: `#result3_canvas`
             });
             animationResult3.startAnimation();
 

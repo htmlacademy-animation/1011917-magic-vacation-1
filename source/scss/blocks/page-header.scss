@@ -1,12 +1,3 @@
-body {
-  &.load {
-    & .page-header__logo {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-}
-
 .page-header {
   position: fixed;
   top: 0;
@@ -44,16 +35,16 @@ body {
   padding: 1rem 0;
   width: 10rem;
   color: $c-light;
-
-  transform: translateX(-4rem);
   opacity: 0;
-  transition: opacity, transform;
-  transition-timing-function: cubic-bezier(0.5, 0.8, 1, 1);
-  transition-duration: 0.5s;
+  transform: translateX(-30%);
 
-  .body--loaded & {
-    transform: translateX(0);
+  transition-property: transform, opacity;
+  transition-duration: $duration-m1-t2;
+  transition-timing-function: $bez-m1-t2;
+
+  .page__load & {
     opacity: 1;
+    transform: translateX(0);
   }
 
   @media (min-width: $stop-scaling) {
@@ -116,13 +107,13 @@ body {
     position: absolute;
     right: 0.8rem;
     height: 1px;
-    background-color: var(--state-main);
+    background-color: $c-dark;
   }
 
   &::before {
     top: 0.9rem;
     width: 1rem;
-    box-shadow: 0 0.6rem 0 0 var(--state-main);
+    box-shadow: 0 0.6rem 0 0 $c-dark;
   }
 
   &::after {
@@ -150,12 +141,6 @@ body {
 .page-header__nav {
   display: flex;
   align-items: center;
-  opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.5, 0.8, 1, 1) 0.5s;
-
-  .body--loaded & {
-    opacity: 1;
-  }
 
   @media (max-width: $tablet) and (orientation: portrait) {
     position: fixed;
@@ -186,7 +171,7 @@ body {
     align-items: flex-start;
     padding: 2rem 3.5rem;
     max-height: calc(var(--vh, 1vh) * 100);
-    color: var(--state-main);
+    color: $c-dark;
     background-color: $c-light;
     overflow-y: auto;
 
@@ -203,6 +188,15 @@ body {
   font-size: 1.2rem;
   line-height: 1.0418;
   color: $c-light;
+  opacity: 0;
+
+  transition-property: opacity;
+  transition-duration: $duration-m1-t2;
+  transition-timing-function: $bez-m1-t2;
+
+  .page__load & {
+    opacity: 1;
+  }
 
   @media (min-width: $stop-scaling) {
     font-size: 12px;
@@ -211,13 +205,13 @@ body {
   @media (max-width: $tablet) and (orientation: portrait) {
     margin: auto 0;
     font-size: 2.4rem;
-    color: var(--state-main);
+    color: $c-dark;
   }
 
   @media (max-width: $mobile) and (orientation: landscape) {
     margin: auto 0;
     font-size: 1.4rem;
-    color: var(--state-main)
+    color: $c-dark;
   }
 
   ul {
@@ -267,46 +261,64 @@ body {
     display: block;
     color: inherit;
     padding: 0 0.5em 0.5em;
-    transition: all .3s ease-in-out;
+
+    &::before {
+      content: "";
+      width: 0;
+      height: 2px;
+      background-color: $c-purple;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transition: width 0.3s ease;
+    }
+    
+    &:hover {
+      &:before {
+        width: 100%;
+        right: auto;
+        left: 0;
+      }
+    }
 
     &::after {
       content: "";
       position: absolute;
       bottom: 0;
-      width: 0;
+      width: 100%;
       height: 2px;
       background-color: $c-light;
+      display: none;
       left: 0;
-      transition: all .3s ease-in-out;
 
       @media (max-width: $tablet) and (orientation: portrait) {
         left: 0;
         right: 0;
-        background-color: var(--state-main);
+        background-color: $c-dark;
       }
 
       @media (max-width: $mobile) and (orientation: landscape) {
         left: 0;
         right: 0;
-        background-color: var(--state-main);
+        background-color: $c-dark;
       }
     }
 
     &.active {
       &::after {
-        width: 100%;
+        display: block;
       }
     }
 
     &:hover,
     &:focus {
-      color: var(--state-second);
+      color: $c-purple;
       outline: none;
+      transition: color 0.3s ease;
 
       &::after {
         opacity: 1;
-        background-color: var(--state-second);
-        width: 100%;
+        background-color: $c-purple;
       }
     }
   }
@@ -314,6 +326,15 @@ body {
 
 .page-header__social {
   margin-left: 4.8rem;
+  opacity: 0;
+
+  transition-property: opacity;
+  transition-duration: $duration-m1-t2;
+  transition-timing-function: $bez-m1-t2;
+
+  .page__load & {
+    opacity: 1;
+  }
 
   @media (min-width: $stop-scaling) {
     margin-left: 48px;
